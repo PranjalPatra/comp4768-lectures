@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Introduction · Software Development for Mobile Devices</title>
+<meta name="description" content="COMP 4768, Fall 2026">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:theme');
+    var theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:mode');
+    var mode = (saved === 'workbook' || saved === 'answers') ? saved : 'slides';
+    document.documentElement.setAttribute('data-mode', mode);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:fontsize');
+    var size = (saved === 'small' || saved === 'large') ? saved : 'medium';
+    document.documentElement.setAttribute('data-font-size', size);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="icon-btn icon-btn--menu" id="btn-sidebar-toggle" title="Contents" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+    <span class="topbar__crest"><img src="../assets/img/mun-logo.png" alt="Memorial University" class="topbar__logo"></span>
+    <a class="topbar__course" href="../index.html">Software Development for Mobile Devices</a>
+    <span class="topbar__sep">/</span>
+    <span class="topbar__title">L1: Course Introduction</span>
+  </div>
+  <div class="topbar__right">
+    <span class="topbar__arc" id="arc"></span>
+    <span class="topbar__counter" id="counter"></span>
+    <div class="mode-switch" id="mode-switch">
+      <button class="mode-btn" data-mode-btn="slides" title="Slides -- teaching content only (S)">Slides</button>
+      <button class="mode-btn" data-mode-btn="workbook" title="Workbook -- + questions, blank answers (W)">Workbook</button>
+      <button class="mode-btn" data-mode-btn="answers" title="Workbook + Solutions (A)">Answers</button>
+    </div>
+    <div class="font-switch" id="font-switch">
+      <button class="font-btn" data-font-btn="small" title="Small text">S</button>
+      <button class="font-btn" data-font-btn="medium" title="Medium text">M</button>
+      <button class="font-btn" data-font-btn="large" title="Large text (default)">L</button>
+    </div>
+    <button class="theme-switch" id="btn-theme" title="Toggle light / dark (T / D)" aria-pressed="false">
+      <span class="theme-switch__track"><span class="theme-switch__thumb"></span></span>
+    </button>
+    <button class="icon-btn" id="btn-notes" title="Toggle AI Explanation (N)">AI Explanation</button>
+    <button class="icon-btn" id="btn-present" title="Present, full screen (F)">Present</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar__arc">Course Introduction</div>
+    <button class="sidebar__item" data-index="0" title="Software Development for Mobile Devices"><span class="sidebar__bullet">1</span><span class="sidebar__label">Software Development for Mobile Devices</span></button>
+    <div class="sidebar__arc">Mobile App Development</div>
+    <button class="sidebar__item" data-index="1" title="Native Apps"><span class="sidebar__bullet">2</span><span class="sidebar__label">Native Apps</span></button>
+    <button class="sidebar__item" data-index="2" title="Cross-Platform Development"><span class="sidebar__bullet">3</span><span class="sidebar__label">Cross-Platform Development</span></button>
+    <button class="sidebar__item" data-index="3" title="Adobe Flash and AIR"><span class="sidebar__bullet">4</span><span class="sidebar__label">Adobe Flash and AIR</span></button>
+    <button class="sidebar__item" data-index="4" title="Web-Based Mobile Apps"><span class="sidebar__bullet">5</span><span class="sidebar__label">Web-Based Mobile Apps</span></button>
+    <button class="sidebar__item" data-index="5" title="React Native"><span class="sidebar__bullet">6</span><span class="sidebar__label">React Native</span></button>
+    <div class="sidebar__arc">Dart, Flutter, and Application Tools</div>
+    <button class="sidebar__item" data-index="6" title="Dart"><span class="sidebar__bullet">7</span><span class="sidebar__label">Dart</span></button>
+    <button class="sidebar__item" data-index="7" title="Flutter"><span class="sidebar__bullet">8</span><span class="sidebar__label">Flutter</span></button>
+    <button class="sidebar__item" data-index="8" title="Rendering and Hot Reload"><span class="sidebar__bullet">9</span><span class="sidebar__label">Rendering and Hot Reload</span></button>
+    <button class="sidebar__item" data-index="9" title="Firebase"><span class="sidebar__bullet">10</span><span class="sidebar__label">Firebase</span></button>
+    <button class="sidebar__item" data-index="10" title="MVVM Architecture"><span class="sidebar__bullet">11</span><span class="sidebar__label">MVVM Architecture</span></button>
+    <button class="sidebar__item" data-index="11" title="go_router and Riverpod"><span class="sidebar__bullet">12</span><span class="sidebar__label">go_router and Riverpod</span></button>
+    <button class="sidebar__item" data-index="12" title="Development Tools and Resources"><span class="sidebar__bullet">13</span><span class="sidebar__label">Development Tools and Resources</span></button>
+    <div class="sidebar__arc">Course Outline</div>
+    <button class="sidebar__item" data-index="13" title="Evaluation"><span class="sidebar__bullet">14</span><span class="sidebar__label">Evaluation</span></button>
+    <button class="sidebar__item" data-index="14" title="Dart and Flutter Topics"><span class="sidebar__bullet">15</span><span class="sidebar__label">Dart and Flutter Topics</span></button>
+    <button class="sidebar__item" data-index="15" title="Application Architecture and Services"><span class="sidebar__bullet">16</span><span class="sidebar__label">Application Architecture and Services</span></button>
+    <button class="sidebar__item" data-index="16" title="Policies and Student Support"><span class="sidebar__bullet">17</span><span class="sidebar__label">Policies and Student Support</span></button>
+  </nav>
+  <div class="sidebar-scrim" id="sidebar-scrim"></div>
+  <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0"
+       title="Drag to resize, double-click to collapse"></div>
+
+  <main class="content">
+    <div class="steps" id="steps">
+      <section class="step" data-index="0">
+  <h2 class="step__title">Software Development for Mobile Devices</h2>
+  <div class="step__body">
+    <p>COMP 4768 focuses on the design and implementation of software in a mobile networking environment using Dart, Flutter, and Firebase.</p>
+<ul><li><strong>Instructor:</strong> Pranjal Patra, EN-2008. Email: pranjal.patra@mun.ca.</li><li><strong>Lectures:</strong> Monday, Wednesday, and Friday, 11:00–11:50 a.m., C4036. No scheduled labs.</li><li><strong>Term:</strong> September 9 to December 7, 2026.</li><li><strong>Prerequisites:</strong> COMP 2008 or former COMP 2760, COMP 2006 or former COMP 3715, and COMP 2005 or former COMP 3716.</li><li><strong>Materials:</strong> No required textbook. Notes, examples, and assignment instructions are on Brightspace.</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="1">
+  <h2 class="step__title">Native Apps</h2>
+  <div class="step__body">
+    <p>Native development uses the tools and user-interface components of a particular platform.</p>
+<div class="table-wrap"><table><thead><tr><th>Platform</th><th>Languages associated with its development</th></tr></thead><tbody><tr><td>iOS</td><td>Objective-C, then Swift</td></tr><tr><td>Android</td><td>Java, then Kotlin</td></tr></tbody></table></div>
+<p>Earlier mobile platforms included Symbian, Windows Mobile, and BlackBerry. The arrival of iPhone and Android expanded the mobile application market.</p>
+<p>Supporting iOS and Android separately requires maintaining platform-specific code, testing both versions, and working with different development tools.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="2">
+  <h2 class="step__title">Cross-Platform Development</h2>
+  <div class="step__body">
+    <p>Cross-platform development aims to share application code across platforms.</p>
+<p>The business reason is straightforward: reach users on more devices without repeating all the development work.</p>
+<p>Different approaches share different parts of an application:</p>
+<ul><li>a runtime can execute shared application code;</li><li>a web container can display an interface built with web technologies;</li><li>a framework can use native components or draw its own interface.</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="3">
+  <h2 class="step__title">Adobe Flash and AIR</h2>
+  <div class="step__body">
+    <p>Flash and AIR allowed developers to package ActionScript applications for desktop and mobile use. They were suited to multimedia and interactive content.</p>
+<p>The approach offered shared code, but mobile applications faced constraints involving the runtime, performance, battery use, and platform support.</p>
+<p>I built a cross-platform application in <strong>2012 using Adobe Flash</strong> for a research project while working with <strong>Dr. Oscar Meruvia-Pastor</strong>.</p>
+<p><a href="https://youtu.be/a_u-NAF2cXg" target="_blank" rel="noopener">Watch the 2012 research project video</a></p>
+  </div>
+  
+</section>
+    <section class="step" data-index="4">
+  <h2 class="step__title">Web-Based Mobile Apps</h2>
+  <div class="step__body">
+    <p>Apache Cordova and PhoneGap used HTML, CSS, and JavaScript inside a mobile application's WebView.</p>
+<p>A WebView is a component that displays web content inside an application.</p>
+<ul><li>Developers could reuse web development skills and share code across platforms.</li><li>Plugins provided access to device features.</li><li>The interface and performance depended on the web container and the application.</li><li>Complex interfaces and hardware access could require additional work.</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="5">
+  <h2 class="step__title">React Native</h2>
+  <div class="step__body">
+    <p>React Native combines JavaScript and React with native user-interface components. Facebook introduced it in 2015.</p>
+<p>It offers shared application code, a development workflow with rapid feedback, and access to native modules when needed.</p>
+<p>The use of native components is an important distinction from a WebView-based interface. Platform-specific behaviour can still require native development knowledge and testing.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="6">
+  <h2 class="step__title">Dart</h2>
+  <div class="step__body">
+    <p>Dart is Google's programming language for client applications. It is the language used to write Flutter applications.</p>
+<p>Its features include:</p>
+<ul><li>classes and interfaces for organizing code;</li><li>static typing with type inference;</li><li>null safety for handling values that may be absent;</li><li>asynchronous programming with <code>async</code> and <code>await</code>;</li><li>garbage collection for memory management.</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="7">
+  <h2 class="step__title">Flutter</h2>
+  <div class="step__body">
+    <p>Flutter is Google's open-source toolkit for building application interfaces from a shared codebase.</p>
+<p>A Flutter interface is composed of widgets. Widgets describe elements such as layouts, text, buttons, and forms.</p>
+<p>Flutter supports mobile applications as well as web and desktop targets. Its rendering approach gives developers control over the interface across platforms.</p>
+<p>Dart is the programming language. Flutter provides the interface framework and development tools.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="8">
+  <h2 class="step__title">Rendering and Hot Reload</h2>
+  <div class="step__body">
+    <p>Flutter draws its widgets through its rendering system, rather than relying on a corresponding native control for every widget.</p>
+<p>For mobile development:</p>
+<ul><li>Just-in-Time (JIT) compilation supports the development workflow.</li><li>Hot reload applies many code changes while preserving application state.</li><li>Ahead-of-Time (AOT) compilation produces native code for release builds.</li></ul>
+<p>Flutter DevTools and the Flutter Inspector help examine application behaviour and interfaces.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="9">
+  <h2 class="step__title">Firebase</h2>
+  <div class="step__body">
+    <p>Firebase provides managed backend services for web and mobile applications. It lets application developers use backend capabilities without managing the underlying servers themselves.</p>
+<div class="table-wrap"><table><thead><tr><th>Service</th><th>Purpose</th></tr></thead><tbody><tr><td>Authentication</td><td>User sign-up and sign-in</td></tr><tr><td>Cloud Firestore</td><td>Store and synchronize application data</td></tr><tr><td>Cloud Storage</td><td>Store files such as images</td></tr><tr><td>Cloud Messaging</td><td>Deliver push notifications</td></tr><tr><td>Cloud Functions</td><td>Run backend logic</td></tr></tbody></table></div>
+<p>The course focuses on integrating services with the application and controlling access to data.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="10">
+  <h2 class="step__title">MVVM Architecture</h2>
+  <div class="step__body">
+    <p>Model–View–ViewModel (MVVM) separates the interface from application state and behaviour. In this course, repositories and services organize data access.</p>
+<figure class="figure figure--diagram"><svg viewBox="0 0 772 75" width="48.25em" role="img" aria-label="View to ViewModel; ViewModel to Repository; Repository to Service"><rect class="diagram__box" x="16.0" y="16.0" width="152" height="43.0" rx="4"/><text class="diagram__text" x="92.0" y="37.5" text-anchor="middle" dominant-baseline="central">View</text><rect class="diagram__box" x="212.0" y="16.0" width="152" height="43.0" rx="4"/><text class="diagram__text" x="288.0" y="37.5" text-anchor="middle" dominant-baseline="central">ViewModel</text><rect class="diagram__box" x="408.0" y="16.0" width="152" height="43.0" rx="4"/><text class="diagram__text" x="484.0" y="37.5" text-anchor="middle" dominant-baseline="central">Repository</text><rect class="diagram__box" x="604.0" y="16.0" width="152" height="43.0" rx="4"/><text class="diagram__text" x="680.0" y="37.5" text-anchor="middle" dominant-baseline="central">Service</text><line class="diagram__edge" x1="168.0" y1="37.5" x2="203.0" y2="37.5"/><polygon class="diagram__head" points="212.0,37.5 203.0,41.5 203.0,33.5"/><line class="diagram__edge" x1="364.0" y1="37.5" x2="399.0" y2="37.5"/><polygon class="diagram__head" points="408.0,37.5 399.0,41.5 399.0,33.5"/><line class="diagram__edge" x1="560.0" y1="37.5" x2="595.0" y2="37.5"/><polygon class="diagram__head" points="604.0,37.5 595.0,41.5 595.0,33.5"/></svg></figure>
+<ul><li><strong>View:</strong> displays the interface and forwards user actions.</li><li><strong>ViewModel:</strong> holds screen state and handles application behaviour.</li><li><strong>Repository:</strong> manages application data and provides a consistent access point.</li><li><strong>Service:</strong> communicates with Firebase or another external API.</li></ul>
+<p>This separation supports testing and changes to the data source without rewriting the screens.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="11">
+  <h2 class="step__title">go_router and Riverpod</h2>
+  <div class="step__body">
+    <p><strong>go_router</strong> organizes navigation. Routes identify screens with addresses such as <code>/tasks/42</code>. Routing includes parameters, links to specific screens, redirects, and error pages.</p>
+<p><strong>Riverpod</strong> organizes shared state and logic through providers. For example, several screens may need the signed-in user or the same list of tasks.</p>
+<p>Providers let interested widgets observe state changes. The course uses Riverpod Notifiers and AsyncNotifiers to implement application behaviour, including ViewModels.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="12">
+  <h2 class="step__title">Development Tools and Resources</h2>
+  <div class="step__body">
+    <p>Follow the <a href="https://docs.flutter.dev/get-started/install" target="_blank" rel="noopener">Flutter installation guide</a> to install the SDK, set up an editor, and configure a device or emulator.</p>
+<p>The primary course tools are <strong>VS Code and an Android emulator</strong>. The introductory deck also identifies Android Studio as an editor option.</p>
+<p>Use <code>flutter doctor</code> to check the development environment and identify missing setup steps.</p>
+<p>Useful resources: <a href="https://flutter.dev/learn" target="_blank" rel="noopener">Flutter learning materials</a>, <a href="https://dart.dev/overview" target="_blank" rel="noopener">Dart overview</a>, <a href="https://docs.flutter.dev/cookbook" target="_blank" rel="noopener">Flutter cookbook</a>, and <a href="https://docs.flutter.dev/codelabs" target="_blank" rel="noopener">Flutter codelabs</a>.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="13">
+  <h2 class="step__title">Evaluation</h2>
+  <div class="step__body">
+    <div class="table-wrap"><table><thead><tr><th>Component</th><th>Weight</th><th>Release</th><th>Due</th></tr></thead><tbody><tr><td>Assignment 1: Dart, Flutter, and Forms</td><td>15%</td><td>Sept. 25</td><td>Oct. 18</td></tr><tr><td>Assignment 2: go_router and Riverpod</td><td>15%</td><td>Oct. 14</td><td>Oct. 30</td></tr><tr><td>Assignment 3: Firebase services and Security Rules</td><td>15%</td><td>Oct. 28</td><td>Nov. 15</td></tr><tr><td>Individual, AI-assisted personal project</td><td>20%</td><td>Nov. 7</td><td>Dec. 7</td></tr><tr><td>Final examination</td><td>35%</td><td>Registrar-scheduled</td><td>Dec. 10–18 period</td></tr></tbody></table></div>
+<p>Assignment and project submissions are due at <strong>11:59 p.m.</strong> on the listed dates. The weights total <strong>100%</strong>.</p>
+<p>The final examination draws approximately <strong>5–10% of its questions from each assignment</strong>. Independent assignment work is part of exam preparation.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="14">
+  <h2 class="step__title">Dart and Flutter Topics</h2>
+  <div class="step__body">
+    <p><strong>Dart foundations:</strong> variables and types, collections, control flow, functions, classes, inheritance, interfaces, and libraries. The course also covers null safety, asynchronous programming, streams, and error handling.</p>
+<p><strong>Flutter interfaces:</strong> the widget tree, stateless and stateful widgets, layouts, commonly used controls, and images.</p>
+<p><strong>Forms and interaction:</strong> text fields, input validation, form state, and tabs.</p>
+<p>These foundations support the applications developed in the assignments and personal project.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="15">
+  <h2 class="step__title">Application Architecture and Services</h2>
+  <div class="step__body">
+    <ul><li><strong>MVVM:</strong> Views, ViewModels, repositories, services, and project organization.</li><li><strong>go_router:</strong> route parameters, nested navigation, redirects, and error pages.</li><li><strong>Riverpod:</strong> providers, shared state, immutable updates, and asynchronous ViewModels.</li><li><strong>Firebase:</strong> Authentication, Firestore, Storage, queries, realtime data, and offline behaviour.</li><li><strong>Security and device APIs:</strong> access rules, emulator testing, images, location, sensors, permissions, and notifications.</li><li><strong>Agentic development:</strong> coding tools, repository instructions, MCP integrations, testing, verification, and review.</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="16">
+  <h2 class="step__title">Policies and Student Support</h2>
+  <div class="step__body">
+    <ul><li><strong>Grace days:</strong> five days total for Assignments 1–3, applied automatically and retroactively. They do not apply to the project or final examination.</li><li><strong>AI use:</strong> permitted, but not recommended for doing Assignments 1–3. AI-assisted development is required for the personal project. Understand and be able to explain all submitted code.</li><li><strong>Academic integrity:</strong> submitted work must not be copied from another student or an online source.</li><li><strong>Missed final:</strong> email cs-ugradadv@mun.ca within 48 hours and follow the deferred-examination process.</li><li><strong>Communication:</strong> check Brightspace. Email pranjal.patra@mun.ca with COMP4768 in the subject line.</li><li><strong>Support:</strong> contact the Glenn Roy Blundon Centre early for accommodations. Advising, wellness, and student support services are available.</li></ul>
+  </div>
+  
+</section>
+    </div>
+
+    <div class="stepnav">
+      <button class="btn btn--ghost" id="btn-back">Back</button>
+      <button class="btn btn--primary" id="btn-next">Next</button>
+    </div>
+  </main>
+</div>
+
+<aside class="notes-panel" id="notes-panel">
+  <div class="resizer resizer--notes" id="notes-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0" title="Drag to resize"></div>
+  <div class="notes-panel__header">
+    <span>AI Explanation</span>
+    <button class="icon-btn icon-btn--close" id="btn-notes-close" title="Close (N)">Close</button>
+  </div>
+  <div class="notes-panel__body" id="notes-body">
+    <div class="note" data-index="0">
+  <h3 class="note__title">Software Development for Mobile Devices</h3>
+  <p>Department of Computer Science, Memorial University of Newfoundland.</p>
+<p>Office hours are Fridays, 12:00 to 2:00 p.m., by appointment. Book a time using the Google Calendar link supplied with the course outline. Meetings may be in person or online.</p>
+<p>The course develops a foundation for building mobile applications and continuing to learn the framework independently. It includes application structure, backend services, testing, and responsible use of coding models.</p>
+</div>
+    <div class="note" data-index="1">
+  <h3 class="note__title">Native Apps</h3>
+  <p>The same application may need similar features on both platforms, but separate implementations can create differences in appearance and behaviour. A feature change can require work in both codebases.</p>
+<p>Native development provides access to the platform's own capabilities. The practical question for a team is how much code it can share while providing the experience each platform requires.</p>
+</div>
+    <div class="note" data-index="2">
+  <h3 class="note__title">Cross-Platform Development</h3>
+  <p>A shared codebase can reduce duplicated work, but it does not remove the need to test on the target platforms. Device features, operating-system behaviour, and user-interface expectations still matter.</p>
+<p>The approaches below show different answers to the same problem. Each makes choices about how to display the interface and how to reach device capabilities.</p>
+</div>
+    <div class="note" data-index="3">
+  <h3 class="note__title">Adobe Flash and AIR</h3>
+  <p>This project is an example of cross-platform development before the tools used in this course. The video demonstrates the application built for that research work.</p>
+<p>Flash and AIR belong to the historical context of the course. The course applications use Dart and Flutter.</p>
+</div>
+    <div class="note" data-index="4">
+  <h3 class="note__title">Web-Based Mobile Apps</h3>
+  <p>This approach places a web interface inside an installed application. The application's appearance does not automatically become the same as the platform's native controls.</p>
+<p>Plugins connect the shared application to capabilities provided by the device. That connection is an important part of the approach, because web content alone does not provide every mobile capability.</p>
+</div>
+    <div class="note" data-index="5">
+  <h3 class="note__title">React Native</h3>
+  <p>React Native is one approach to sharing application code while using platform components for the interface. Flutter takes a different approach to rendering, described below.</p>
+<p>Framework choice depends on the team's experience, application requirements, and target platforms. A feature table alone cannot establish that one framework will always be faster, smaller, or easier to maintain.</p>
+</div>
+    <div class="note" data-index="6">
+  <h3 class="note__title">Dart</h3>
+  <p>Dart began with a focus on web development and became the language used by Flutter. In this course, Dart supplies the language constructs needed to express application behaviour.</p>
+<p>Type inference lets Dart determine some types without a written annotation. Asynchronous programming supports work such as waiting for data without treating every operation as an immediate result. These are topics to learn in the Dart foundation, rather than syntax to memorize during this introduction.</p>
+</div>
+    <div class="note" data-index="7">
+  <h3 class="note__title">Flutter</h3>
+  <p>A widget can describe a visible control or help arrange other widgets. Larger interfaces are built by composing smaller parts.</p>
+<p>The course focuses on the concepts needed to build applications, then use documentation and examples to extend them. It does not attempt to cover every widget or platform feature.</p>
+</div>
+    <div class="note" data-index="8">
+  <h3 class="note__title">Rendering and Hot Reload</h3>
+  <p>The rendering approach supports consistent custom interfaces across platforms. It does not remove the need to check performance and behaviour on the devices an application supports.</p>
+<p>Hot reload shortens the cycle between changing code and seeing its effect. Some changes require a restart, so it should not be understood as a promise that every edit can preserve all state. The compilation description here concerns mobile builds.</p>
+</div>
+    <div class="note" data-index="9">
+  <h3 class="note__title">Firebase</h3>
+  <p>Firebase also includes Realtime Database and Firebase AI Logic, which the introductory deck identifies as services for synchronized data and access to Google's Gemini models. Listing a platform service does not make it a required course topic.</p>
+<p>Managed services reduce the infrastructure a developer must operate. Application developers still have to design data access, handle errors, and configure security correctly.</p>
+</div>
+    <div class="note" data-index="10">
+  <h3 class="note__title">MVVM Architecture</h3>
+  <p>The arrows show the direction in which these parts depend on one another. They do not mean that returned data travels only in that direction. The View should not make database calls directly.</p>
+<p>The course first uses a fake repository, then integrates Firebase through the Service layer. It also revisits the ViewModel using Riverpod.</p>
+<p><a href="https://docs.flutter.dev/app-architecture/guide" target="_blank" rel="noopener">Flutter application architecture guide</a></p>
+</div>
+    <div class="note" data-index="11">
+  <h3 class="note__title">go_router and Riverpod</h3>
+  <p>A deep link opens a particular location inside an application. Navigation rules also determine what happens when the user follows a link without being signed in or requests a location that does not exist.</p>
+<p>State includes values that the interface depends on, such as a selected task or the result of a data request. Network requests also have loading and error states. Riverpod supports organizing those states, retaining provider results, and substituting implementations for tests.</p>
+<p>These tools address different responsibilities: go_router handles where the user is in the application, while Riverpod helps manage the data and behaviour used there.</p>
+</div>
+    <div class="note" data-index="12">
+  <h3 class="note__title">Development Tools and Resources</h3>
+  <p>The installation guide provides the steps for the operating system and target platform being used. The results of <code>flutter doctor</code> depend on which tools are installed and which platforms are being targeted.</p>
+<p>Use documentation to look up an unfamiliar widget or API and use small examples to understand its behaviour. The course provides a foundation for independent application development, rather than a complete catalogue of the framework.</p>
+</div>
+    <div class="note" data-index="13">
+  <h3 class="note__title">Evaluation</h3>
+  <p>All dates are in Fall 2026. Assignment 3 covers Firebase Authentication, Firestore, Storage, and Security Rules. November 7 is the release date of the personal project brief.</p>
+<p>The examination period is December 10 to 18. The Registrar determines the specific date and time of the final examination.</p>
+<p>The personal project is an individual capstone that requires AI-assisted development. Students remain responsible for understanding and explaining every component they submit.</p>
+</div>
+    <div class="note" data-index="14">
+  <h3 class="note__title">Dart and Flutter Topics</h3>
+  <p>The Dart topics include <code>var</code>, <code>final</code>, <code>const</code>, and <code>late</code>, lists, sets, maps, conditionals, loops, and switch expressions. Functions include optional and named parameters. Class topics include constructors, getters, setters, abstract classes, privacy, and libraries.</p>
+<p>The asynchronous topics include <code>Future</code>, <code>async</code>, <code>await</code>, and streams. Error handling includes <code>try</code>, <code>catch</code>, and <code>finally</code>.</p>
+<p>Flutter topics include displaying images and building a stateful application. Tabbed interfaces use <code>TabController</code>, <code>TabBar</code>, and <code>TabBarView</code>.</p>
+</div>
+    <div class="note" data-index="15">
+  <h3 class="note__title">Application Architecture and Services</h3>
+  <p>The architecture material begins with <code>ChangeNotifier</code>, <code>ListenableBuilder</code>, and a fake in-memory repository. Project folders separate UI, ViewModels, repositories, services, routing, and domain models. The optional use-case layer is outside the course scope.</p>
+<p>Navigation includes path and query parameters. State management examines the limits of <code>setState()</code>, then introduces providers, <code>NotifierProvider</code>, list state, immutable updates, derived providers, <code>ref.watch</code>, and <code>ref.read</code>. The ViewModel is also implemented as a Riverpod <code>AsyncNotifier</code>.</p>
+<p>Firebase topics include project setup, the FlutterFire CLI, authentication gates, and <code>FirebaseAuthService</code>. A Firebase implementation replaces the fake repository while preserving the View and ViewModel. Firestore topics include reads and writes, filtering, ordering, indexes, data modelling, subcollections, transactions, batch writes, realtime listeners, and offline behaviour. Cloud Storage and <code>image_picker</code> support image uploads.</p>
+<p>Security covers authentication, ownership, public and private access, and Firestore and Storage Security Rules. The Firebase Emulator Suite supports local testing of Authentication, Firestore, Storage, and rules. Device topics include camera and image workflows, location, motion sensors, permissions, notifications, and platform constraints.</p>
+<p>Agentic development includes coding harnesses, <code>AGENTS.md</code>, reusable skills and workflows, MCP and other integrations, delegation of defined tasks, and testing and review of generated code. MCP connects coding tools with other services and capabilities.</p>
+</div>
+    <div class="note" data-index="16">
+  <h3 class="note__title">Policies and Student Support</h3>
+  <p>The teaching assistant applies grace days when marking late assignments. Students do not need to request them or announce their use. Once the five days are used, this policy provides no further assignment extensions.</p>
+<p>There is no blanket ban on generative-AI tools. Students may use AI to explain concepts, review an approach, or help diagnose a problem, but should do the assignment learning work themselves. The course teaches responsible agentic development because software-development tools and practices are changing. The personal project explicitly requires AI assistance. Responsibility for the submitted work remains with the student, regardless of how it was produced.</p>
+<p>Academic integrity follows University Regulation 6.12. Possible penalties include a reprimand, grade reduction, probation, suspension, or expulsion. Requests concerning a missed final follow Regulation 6.8.2.</p>
+<p>Class cancellations, disruptions, and necessary evaluation changes are announced in class and on Brightspace. Evaluation changes involve consultation with students, with appropriate accommodation under Regulation 6.7.4 if a change would disadvantage them. Use email for course questions rather than Brightspace messaging.</p>
+<p>Memorial's accommodation policy supports students with disabilities. Other supports listed in the course outline include the Academic Advising Centre, Student Wellness and Counselling Centre, Indigenous Student Resource Centre, Internationalization Office, Student Support Office, Student Life, and the MUNUp resources hub.</p>
+<p>The outline lists lecture breaks on September 30, October 12, and November 11, the November 4 drop deadline, lectures ending December 7, and the December 10 to 18 examination period. Consult the course outline on Brightspace for the complete policies and linked university resources.</p>
+</div>
+  </div>
+</aside>
+
+<script>window.__ARC_NAMES__ = ["Course Introduction", "Mobile App Development", "Mobile App Development", "Mobile App Development", "Mobile App Development", "Mobile App Development", "Dart, Flutter, and Application Tools", "Dart, Flutter, and Application Tools", "Dart, Flutter, and Application Tools", "Dart, Flutter, and Application Tools", "Dart, Flutter, and Application Tools", "Dart, Flutter, and Application Tools", "Dart, Flutter, and Application Tools", "Course Outline", "Course Outline", "Course Outline", "Course Outline"];</script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

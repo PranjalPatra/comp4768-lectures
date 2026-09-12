@@ -1,0 +1,1235 @@
+/* Course codelabs — shared stylesheet
+   These are lecture slides, presented live in class, with a secondary
+   life as read-it-later notes. Default view is terse and large (readable
+   from the back of a room); "Notes" reveals the expanded explanation;
+   "Present" strips the chrome and goes full screen for projecting. */
+
+/* Two themes, both named explicitly on the root element as data-theme.
+   Light is the standard default (a warm cream page, black body text, and
+   a reserved red/orange/green semantic layer so a callout's meaning reads
+   before its words do); dark is opt-in. A small inline script in <head>
+   sets data-theme before first paint (from localStorage, else 'light'),
+   and the toggle button in the topbar flips it at runtime -- see app.js. */
+
+:root,
+:root[data-theme="light"] {
+  /* Solarized-inspired: warm cream paper, MUN maroon (PMS 202) as the one
+     accent, ink-on-cream body text -- the university's own print palette. */
+  --bg: #FDF6E3;         /* PaperCream */
+  --surface: #FDF6E3;
+  --border: #E3DCC5;
+  --text: #231F20;       /* MunBlack */
+  --text-muted: #63666A; /* MunCoolGrey10 */
+  --accent: #862633;     /* PMS 202 */
+  --accent-dark: #6B1F28;
+  --accent-bg: #EFDDCE;
+  --code-bg: #EEE8D5;    /* PanelCream */
+  --code-border: #97999B;
+  --sidebar-w: 260px;
+  /* The width the sidebar snaps to once it's dragged narrow enough that
+     titles stop being readable. Wide enough for a two-digit slide number
+     inside its 22px bullet, and nothing else. */
+  --sidebar-rail-w: 44px;
+  --notes-w: 420px;
+  --topbar-h: 28px;
+  --heading-font: inherit;
+
+  /* Solarized code palette (CodeKeyword/CodeType/CodeString/CodeCommentInk/
+     CodeNumber/CodeMethod), measured against PanelCream */
+  --tok-keyword: #5B4EA8;
+  --tok-type: #0B3C6E;
+  --tok-string: #1D6F66;
+  --tok-comment: #556264;
+  --tok-number: #8A3E9E;
+  --tok-function: #175E90;
+
+  /* semantic layer: red/orange/green are reserved and never used for
+     decoration or syntax -- only for these three meanings (MUN PMS185 /
+     Orange021 / PMS368, darkened for 4.5:1+ text contrast on cream) */
+  --sem-warn-bg: #FFEFCD;
+  --sem-warn-border: #FE5000;
+  --sem-warn-ink: #CB4000;
+  --sem-good-bg: #EFF7E4;
+  --sem-good-border: #78BE20;
+  --sem-good-ink: #4E7C15;
+  --sem-bad-bg: #FCE6EA;
+  --sem-bad-border: #E4002B;
+  --sem-bad-ink: #D20028;
+}
+
+:root[data-theme="dark"] {
+  /* Rich-inspired: a warm charcoal terminal canvas with Monokai-family
+     accents. Salmon stands in for MUN maroon as the one accent; red/orange/
+     green stay reserved for bad/warn/good, same rule as the light theme. */
+  --bg: #272822;          /* RichBg */
+  --surface: #1C1D18;     /* RichBand -- topbar/sidebar/panels */
+  --border: #43443A;
+  --text: #F8F8F2;        /* RichText */
+  --text-muted: #9C9A85;  /* lightened RichDim, for UI-label contrast */
+  --accent: #F07178;      /* RichSalmon */
+  --accent-dark: #66D9EF; /* RichCyan */
+  --accent-bg: #3C2E30;
+  --code-bg: #34352C;     /* RichPanel */
+  --code-border: #4B4C40;
+  --sidebar-w: 260px;
+  /* The width the sidebar snaps to once it's dragged narrow enough that
+     titles stop being readable. Wide enough for a two-digit slide number
+     inside its 22px bullet, and nothing else. */
+  --sidebar-rail-w: 44px;
+  --notes-w: 420px;
+  --topbar-h: 28px;
+  /* the Rich theme sets the whole deck in a terminal monospace family;
+     here that's kept to headings/labels so long-form prose stays readable */
+  --heading-font: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* Rich code inks, measured against the code panel (#34352C) */
+  --tok-keyword: #7CB8E8;
+  --tok-type: #4EC9B0;
+  --tok-string: #D9A184;
+  --tok-comment: #8CBE72;
+  --tok-number: #B5CEA8;
+  --tok-function: #DCDCAA;
+
+  --sem-warn-bg: #3A2F1C;
+  --sem-warn-border: #FD971F;
+  --sem-warn-ink: #FD971F;
+  --sem-good-bg: #202F18;
+  --sem-good-border: #A6E22E;
+  --sem-good-ink: #A6E22E;
+  --sem-bad-bg: #35131C;
+  --sem-bad-border: #F92672;
+  --sem-bad-ink: #F92672;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ---------------------------------------------------------------- topbar */
+
+.topbar {
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar__left {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+
+/* MUN crest -- a small light plate behind the logo so its dark-grey
+   "University" wordmark stays legible on both the cream and charcoal
+   canvases, the way a letterhead crest would. */
+.topbar__crest {
+  display: inline-flex;
+  align-items: center;
+  align-self: center; /* topbar__left aligns siblings to baseline; opt this
+                          image out, or its baseline inflates the row past
+                          the fixed 28px topbar height */
+  background: #FDF6E3;
+  border-radius: 4px;
+  padding: 2px 5px;
+  flex-shrink: 0;
+}
+.topbar__logo { display: block; height: 14px; width: auto; }
+
+.topbar__course {
+  font-weight: 700;
+  font-size: 12.5px;
+  font-family: var(--heading-font);
+  color: var(--text);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 40vw;
+}
+
+.topbar__sep { color: var(--text-muted); }
+
+.topbar__title {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.topbar__counter {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Which arc (leg of the throughline) the current slide belongs to -- the
+   "always see where you are" requirement from the slides guide. Updated
+   live by app.js from window.__ARC_NAMES__. */
+.topbar__arc {
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: var(--heading-font);
+  color: var(--accent-dark);
+  background: var(--accent-bg);
+  border-radius: 10px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.icon-btn {
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 3px 10px;
+  cursor: pointer;
+  /* A docked explanation panel narrows the topbar. These labels must hold
+     one line and give up horizontal room instead of wrapping into two and
+     pushing the bar's height around. */
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: var(--code-bg); color: var(--text); }
+
+/* Opens the sidebar as an off-canvas drawer below the mobile breakpoint --
+   see the "mobile" section at the end of this file. Above that breakpoint
+   the sidebar is already always visible in the layout, so this has nothing
+   to do and stays hidden. */
+.icon-btn--menu {
+  display: none;
+  font-size: 15px;
+  line-height: 1;
+  padding: 3px 8px;
+}
+
+/* Backdrop behind the mobile drawer, so a tap outside it closes the sidebar
+   instead of reaching whatever slide content is underneath. Absent from the
+   layout above the mobile breakpoint and while the drawer is closed. */
+.sidebar-scrim { display: none; }
+
+/* Slides / Workbook / Answers -- the three content modes, as a segmented
+   button group. Switching modes never reloads the page: it just flips
+   data-mode on <html>, and the stylesheet does the rest (see "exercises"
+   and the html[data-mode=...] rules below). */
+.mode-switch {
+  display: flex;
+  gap: 2px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px;
+}
+
+.mode-btn {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+.mode-btn:hover { color: var(--text); }
+.mode-btn.is-active { background: var(--accent); color: #fff; }
+
+/* Same segmented-pill look as .mode-switch, for the reading-size control.
+   Only affects the normal (non-present) view -- see the data-font-size
+   rules under "content" below, and the present-mode override that pins
+   .content back to its default size regardless of this choice. */
+.font-switch {
+  display: flex;
+  gap: 2px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px;
+}
+
+.font-btn {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 3px 8px;
+  cursor: pointer;
+  min-width: 18px;
+}
+.font-btn:hover { color: var(--text); }
+.font-btn.is-active { background: var(--accent); color: #fff; }
+
+/* Clean toggle switch for light/dark, replacing the old text button. The
+   CSS reads data-theme directly to slide the thumb; app.js only flips the
+   attribute and persists it, see markTheme()/setTheme() in app.js. */
+.theme-switch {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.theme-switch__track {
+  width: 34px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--border);
+  position: relative;
+  display: inline-block;
+  transition: background 0.15s ease;
+}
+
+/* Sun/moon glyphs fixed at each end of the track, so the switch reads as
+   "light on this side, dark on that side" at a glance instead of relying on
+   the thumb color alone -- the thumb slides toward whichever is active. */
+.theme-switch__track::before,
+.theme-switch__track::after {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 8px;
+  line-height: 1;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.theme-switch__track::before { content: "\2600"; left: 3px; }  /* sun, light side */
+.theme-switch__track::after { content: "\263D"; right: 3px; }  /* crescent moon, dark side */
+
+.theme-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease;
+}
+
+html[data-theme="dark"] .theme-switch__track { background: var(--accent); }
+html[data-theme="dark"] .theme-switch__thumb { transform: translateX(18px); }
+html[data-theme="dark"] .theme-switch__track::before,
+html[data-theme="dark"] .theme-switch__track::after {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------------------------------------------------------------- layout */
+
+/* Deliberately uncapped and not centred. A centred cap would let the sidebar
+   drift away from the window edge on a wide screen, and worse, it would move
+   when the explanation panel opens or closes: the panel insets the body, which
+   changes whether the cap is reached. The sidebar has to stay put. Line length
+   is capped where it belongs instead -- on .content's children, in em. */
+.layout {
+  display: flex;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 8px;
+  border-right: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------- resizable panels */
+/* The sidebar and the explanation panel are both drag-resizable, so the
+   reader decides how much room the slide itself gets. Widths live in
+   --sidebar-w / --notes-w, which app.js rewrites during a drag and restores
+   from localStorage on load. Both are hidden in present mode: nothing is
+   adjustable while projecting. */
+
+.resizer {
+  flex-shrink: 0;
+  width: 5px;
+  align-self: stretch;
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+.resizer:hover,
+.resizer.is-dragging { background: var(--accent); }
+.resizer:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* A drag in progress must not select the page text it passes over. */
+body.is-resizing { user-select: none; cursor: col-resize; }
+
+/* Collapsed rail: the numbers survive, everything else goes. The full title
+   is still on each button's title attribute, so hovering still identifies a
+   slide. */
+body.sidebar-collapsed .sidebar {
+  width: var(--sidebar-rail-w);
+  padding: 12px 0;
+}
+body.sidebar-collapsed .sidebar__item {
+  justify-content: center;
+  gap: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+body.sidebar-collapsed .sidebar__label { display: none; }
+
+/* An arc still has to read as a group boundary once its name is gone. */
+body.sidebar-collapsed .sidebar__arc {
+  padding: 10px 12px 4px;
+  font-size: 0;
+  border-top: 1px solid var(--border);
+}
+body.sidebar-collapsed .sidebar__arc:first-child { border-top: none; }
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.sidebar__item:hover { background: var(--code-bg); }
+
+/* A practice slide is all questions, so Slides mode does not have it at all
+   (app.js sets this, and skips it when navigating). It comes back in Workbook
+   and Answers, where its questions are the point. */
+.sidebar__item.is-hidden { display: none; }
+
+.sidebar__bullet {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-muted);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.sidebar__item.is-done .sidebar__bullet {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.sidebar__item.is-active {
+  background: var(--accent-bg);
+}
+
+.sidebar__item.is-active .sidebar__bullet {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.sidebar__item.is-active .sidebar__label {
+  color: var(--accent-dark);
+  font-weight: 600;
+}
+
+.sidebar__label { line-height: 1.25; }
+
+/* Arc group header -- the sidebar's equivalent of a Beamer section row.
+   Not clickable; just orients. */
+.sidebar__arc {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 18px 10px 6px;
+}
+.sidebar__arc:first-child { padding-top: 6px; }
+
+/* ---------------------------------------------------------------- content */
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 48px 64px;
+  /* Baseline for the reading-size control below: every step__body /
+     code-block / table / callout / exercise font-size under .content is
+     an em value, so changing this one number scales all of them at once.
+     16px is "Large", the default. Present mode always resets this back
+     to 16px, independent of whatever size was picked here -- see the
+     body.present-mode override further down. */
+  font-size: 16px;
+}
+
+html[data-font-size="medium"] .content { font-size: 14px; }
+html[data-font-size="small"] .content { font-size: 12px; }
+
+.content--index {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px;
+}
+
+.step { display: none; }
+.step.is-active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - var(--topbar-h) - 140px);
+}
+
+.step__title {
+  /* em, relative to .content's font-size -- see the reading-size control */
+  font-size: 2.375em; /* 38px at the "Large" (16px) baseline */
+  font-weight: 700;
+  font-family: var(--heading-font);
+  letter-spacing: -0.01em;
+  margin: 0 0 28px;
+}
+
+.step__body h3 {
+  font-size: 1.25em; /* 20px at baseline */
+  font-weight: 600;
+  margin: 24px 0 8px;
+}
+
+.step__body h4 {
+  font-size: 0.9375em; /* 15px at baseline */
+  font-weight: 700;
+  margin: 18px 0 6px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.step__body p {
+  font-size: 1.375em; /* 22px at baseline */
+  line-height: 1.6;
+  margin: 0 0 16px;
+  max-width: 46em;
+}
+
+.step__body ul, .step__body ol {
+  font-size: 1.375em; /* 22px at baseline */
+  line-height: 1.55;
+  margin: 0 0 20px;
+  padding-left: 26px;
+  max-width: 46em;
+}
+
+.step__body li { margin-bottom: 10px; }
+
+.step__body a { color: var(--accent); }
+
+.step__body code {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+}
+
+/* --------------------------------------------------------------- code block */
+
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 0 0 22px;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 1.125em; /* 18px at baseline */
+  line-height: 1.55;
+  max-width: 58em;
+}
+
+.code-block code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.tok-keyword  { color: var(--tok-keyword); }
+.tok-type     { color: var(--tok-type); }
+.tok-string   { color: var(--tok-string); }
+.tok-comment  { color: var(--tok-comment); font-style: italic; }
+.tok-number   { color: var(--tok-number); }
+.tok-function { color: var(--tok-function); }
+
+/* -------------------------------------------------------------------- tables */
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  max-width: 62em;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.step__body table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1.0625em; /* 17px at baseline */
+}
+
+.step__body th,
+.step__body td {
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.step__body th {
+  background: var(--code-bg);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.step__body tr:last-child td { border-bottom: none; }
+
+body.present-mode .step__body table { font-size: 20px; }
+
+/* ------------------------------------------------------------------ figures */
+/* A picture and a diagram are the same kind of thing on the page -- a block
+   that sits on its own, centred, with room around it -- so they share .figure
+   and differ only in what is inside. */
+
+.figure {
+  margin: 0 0 22px;
+  max-width: 62em;
+  text-align: center;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* The SVG carries its own width in the markup, in em, so a diagram is sized
+   against the text beside it and grows with it in present mode; it shrinks
+   below that only when the column is narrower than it is. The sizes below are
+   in the SVG's own units rather than the page's pixels, so they scale with the
+   picture instead of staying put while it grows. Nothing here sets a colour:
+   the strokes and fills are currentColor, so the diagram is drawn in whatever
+   colour the text around it is, in either theme and in present mode. */
+.figure--diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram__box {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+}
+
+.diagram__text {
+  fill: currentColor;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.diagram__text--mono {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+}
+
+.diagram__edge {
+  stroke: currentColor;
+  stroke-width: 1.25;
+}
+
+.diagram__head { fill: currentColor; }
+
+/* Smaller than the box text and quieter: the label says what the arrow means,
+   and it should not compete with the things being joined. */
+.diagram__label {
+  fill: currentColor;
+  font-family: inherit;
+  font-size: 12px;
+  opacity: 0.78;
+}
+
+.diagram__label--mono {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+}
+
+/* A ```mermaid fence is rendered ahead of time into two pre-coloured SVGs --
+   see scripts/mermaid_render.py -- because Mermaid bakes literal colours into
+   what it draws rather than using currentColor the way .diagram__* does
+   above. Both variants ship in the page; only the CSS rule below decides
+   which one is visible, so switching themes needs no re-render and no
+   network fetch. This is LecturePress's own wrapper class, not a Mermaid
+   internal one, so it stays stable across a Mermaid version bump. */
+.figure--mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* A node/edge label is real HTML (a <foreignObject><div>...) sitting inside
+   the SVG, not text drawn by the SVG engine, and mmdc measured it against
+   Mermaid's own 16px "trebuchet ms" metrics to size its fixed-pixel box --
+   see the ```mermaid fence at README.md#mermaid-diagrams. Embedded inline,
+   that HTML is a real descendant of .step__body, so without this it inherits
+   whatever font-size .step__body p is using here (22px baseline, 28px in
+   present mode, resized again by the reading-size control), which no longer
+   matches the box mmdc drew, and the label clips. !important is the only way
+   to outrank every one of those rules at once rather than chasing each one's
+   specificity as it changes. */
+.figure--mermaid foreignObject,
+.figure--mermaid foreignObject * {
+  font-family: "trebuchet ms", verdana, arial, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+
+.figure--mermaid foreignObject p {
+  margin: 0 !important;
+}
+
+.mermaid-variant { display: none; }
+
+html[data-theme="light"] .mermaid-variant[data-mermaid-theme="light"],
+html[data-theme="dark"] .mermaid-variant[data-mermaid-theme="dark"] {
+  display: block;
+}
+
+/* ------------------------------------------------------------------ callouts */
+
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-bg);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 20px;
+  margin: 0 0 20px;
+  max-width: 52em;
+}
+
+.callout__label {
+  font-size: 0.78125em; /* 12.5px at baseline */
+  font-weight: 700;
+  font-family: var(--heading-font);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+  color: var(--accent-dark);
+}
+
+.callout__body {
+  font-size: 1.1875em; /* 19px at baseline */
+  line-height: 1.55;
+}
+
+/* A callout holds blocks, not a single run of text, so the paragraph and list
+   sizes of whatever column it sits in (.step__body, .note) would otherwise
+   re-apply inside it and scale the callout's text back up. Inside a callout,
+   blocks take the callout's own size. The extra class on each selector is
+   there to win against those column rules wherever they are declared. */
+.callout .callout__body p,
+.callout .callout__body ul,
+.callout .callout__body ol {
+  font-size: inherit;
+  line-height: inherit;
+  max-width: none;
+}
+.callout .callout__body > :first-child { margin-top: 0; }
+.callout .callout__body > :last-child { margin-bottom: 0; }
+
+/* Red/orange/green are reserved for exactly one meaning each, per the
+   Solarized theme's rule -- never spent on decoration. Predict and warning
+   share the orange "caveat" meaning; checkpoint is the green "do this
+   now, it's correct" meaning; exercise borrows red for "stop and work". */
+.callout--predict,
+.callout--warning {
+  border-left-color: var(--sem-warn-border);
+  background: var(--sem-warn-bg);
+}
+.callout--predict .callout__label,
+.callout--warning .callout__label { color: var(--sem-warn-ink); }
+
+.callout--checkpoint {
+  border-left-color: var(--sem-good-border);
+  background: var(--sem-good-bg);
+}
+.callout--checkpoint .callout__label { color: var(--sem-good-ink); }
+
+/* --------------------------------------------------------------- exercises */
+/* An exercise attached to a slide, extracted from its "> [!EXERCISE]" /
+   "> [!SOLUTION]" pair (see extract_exercises in build.py). Visibility of
+   the whole block, and of the blank-vs-filled-in answer within it, is
+   driven entirely by data-mode on <html> -- no JS re-render needed when
+   switching modes, just CSS. */
+
+.step__exercises { display: none; }
+html[data-mode="workbook"] .step__exercises,
+html[data-mode="answers"] .step__exercises {
+  display: block;
+}
+
+.exercise {
+  border-left: 4px solid var(--sem-bad-border);
+  background: var(--sem-bad-bg);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 0 0 20px;
+  max-width: 52em;
+}
+
+.exercise__label {
+  font-size: 0.78125em; /* 12.5px at baseline */
+  font-weight: 700;
+  font-family: var(--heading-font);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+  color: var(--sem-bad-ink);
+}
+
+.exercise__q-body,
+.exercise__a-body {
+  font-size: 1.1875em; /* 19px at baseline */
+  line-height: 1.55;
+}
+
+/* Blank answer space -- shown only in Workbook mode, standing in for the
+   ruled blank line a printed workbook would have. */
+.exercise__blank {
+  display: none;
+  margin-top: 14px;
+  min-height: 84px;
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+}
+html[data-mode="workbook"] .exercise__blank { display: block; }
+
+.exercise__a {
+  display: none;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--sem-bad-border);
+}
+html[data-mode="answers"] .exercise__a { display: block; }
+.exercise__a .exercise__label { color: var(--sem-good-ink); }
+
+/* ------------------------------------------------- document-level blocks */
+/* Learning outcomes and the reference sheet (the "> [!OUTCOMES]" and
+   "> [!REFERENCE]" callouts, lifted onto the lecture by lecture.py). They
+   open and close the workbook, so they ride on the first and last slide and
+   use the same data-mode gate as the exercises -- never on the projector. */
+
+.docblock {
+  display: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 0 0 24px;
+  max-width: 52em;
+}
+html[data-mode="workbook"] .docblock,
+html[data-mode="answers"] .docblock { display: block; }
+
+.docblock__label {
+  font-size: 0.78125em; /* 12.5px at baseline */
+  font-weight: 700;
+  font-family: var(--heading-font);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+.docblock .docblock__body p,
+.docblock .docblock__body ul,
+.docblock .docblock__body ol {
+  font-size: 1.1875em; /* 19px at baseline, matching a callout */
+  line-height: 1.55;
+  max-width: none;
+}
+.docblock .docblock__body > :first-child { margin-top: 0; }
+.docblock .docblock__body > :last-child { margin-bottom: 0; }
+
+/* ------------------------------------------------------------------ stepnav */
+
+.stepnav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary:hover { background: var(--accent-dark); }
+.btn--primary:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+
+.btn--ghost {
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn--ghost:hover { background: var(--code-bg); }
+.btn--ghost:disabled { opacity: 0.4; cursor: default; }
+
+/* -------------------------------------------------------------- notes panel */
+
+/* Docked, not overlaid: once it's open it stays open and the page makes room
+   for it, rather than covering the slide the reader is trying to read
+   alongside it. body's padding-right is what reserves that room -- the
+   topbar is sticky and in flow, so it gets inset too and nothing ends up
+   underneath the panel. */
+.notes-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--notes-w);
+  max-width: 92vw;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+}
+
+body.notes-open .notes-panel { display: flex; }
+body.notes-open { padding-right: var(--notes-w); }
+
+/* The panel is fixed, so its handle is positioned against its own left edge
+   rather than sitting in the flex row the sidebar's handle lives in. */
+.resizer--notes {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+}
+
+.notes-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.notes-panel__body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.note { display: none; }
+.note.is-active { display: block; }
+
+.note__title {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+
+.note p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 14px;
+}
+
+.note code {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+}
+
+/* -------------------------------------------------------------- present mode */
+
+body.present-mode { background: var(--bg); }
+
+/* Present mode is for projecting: no chrome, nothing adjustable, and no
+   explanation panel -- app.js closes it on the way in and puts it back on
+   the way out. These rules are the belt to that braces. */
+body.present-mode { padding-right: 0; }
+body.present-mode .resizer,
+body.present-mode .notes-panel { display: none; }
+
+body.present-mode .sidebar,
+body.present-mode .stepnav {
+  display: none;
+}
+/* Keep a sliver of the topbar -- just the arc name and slide count -- so a
+   student who tunes out for five minutes still has a visible place to
+   re-enter, even in full-screen present mode. */
+body.present-mode .topbar {
+  background: transparent;
+  border-bottom: none;
+  height: auto;
+  padding: 14px 24px;
+  justify-content: flex-end;
+}
+body.present-mode .topbar__left,
+body.present-mode .icon-btn,
+body.present-mode .mode-switch,
+body.present-mode .font-switch,
+body.present-mode .theme-switch {
+  display: none;
+}
+body.present-mode .content {
+  padding: 6vh 8vw;
+  /* Present mode always uses this fixed size, ignoring whatever the
+     Small/Medium/Large reading-size control was set to for prepping --
+     see .content's data-font-size rules above. */
+  font-size: 16px;
+}
+body.present-mode .step.is-active {
+  min-height: 90vh;
+}
+body.present-mode .step__title { font-size: 52px; }
+body.present-mode .step__body p,
+body.present-mode .step__body ul,
+body.present-mode .step__body ol { font-size: 28px; }
+body.present-mode .code-block { font-size: 23px; }
+body.present-mode .callout__body { font-size: 24px; }
+body.present-mode .exercise__q-body,
+body.present-mode .exercise__a-body { font-size: 24px; }
+body.present-mode .exercise__blank { min-height: 110px; }
+
+/* The reading view caps line length (max-width: NNem) for comfortable
+   reading on a monitor. Full-screen present mode has the opposite goal --
+   use the projector's whole width -- so drop those caps here. */
+body.present-mode .step__body p,
+body.present-mode .step__body ul,
+body.present-mode .step__body ol,
+body.present-mode .code-block,
+body.present-mode .table-wrap,
+body.present-mode .figure,
+body.present-mode .callout,
+body.present-mode .exercise { max-width: none; }
+
+/* -------------------------------------------------------------------- index */
+
+.index__crest {
+  background: #FDF6E3;
+  border-radius: 8px;
+  display: inline-block;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+.index__crest img { display: block; height: 40px; width: auto; }
+
+.index__desc { color: var(--text-muted); font-size: 16px; line-height: 1.6; }
+
+.index__list { list-style: none; padding: 0; margin: 24px 0 0; }
+
+.index__row {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.index__link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.index__lecture {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--heading-font);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.index__title { font-size: 16px; font-weight: 500; }
+
+/* -------------------------------------------------------------------- mobile */
+
+@media (max-width: 860px) {
+  .layout { flex-direction: column; }
+
+  /* The sidebar is the full table of contents -- on a phone that is dozens
+     of rows, far taller than the screen. Left in flow above the slide (the
+     desktop-narrowed layout this used to fall back to) a reader has to
+     scroll past the whole course before reaching the content they opened
+     the page for. Below this breakpoint it is a hidden off-canvas drawer
+     instead: out of the layout entirely until opened, then overlaid on top
+     of the slide rather than pushing it down, so the slide never moves. */
+  .icon-btn--menu { display: inline-flex; align-items: center; justify-content: center; }
+  /* The drawer and its scrim sit at the very top of the viewport, not below
+     the topbar, because the topbar itself wraps onto a second line at this
+     width (below) and so no longer has one fixed height to offset from --
+     see the topbar rules further down. Covering the topbar while the drawer
+     is open is harmless; nothing under it needs to stay reachable. */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 84vw;
+    max-width: 320px;
+    height: auto;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 26;
+  }
+  body.sidebar-open .sidebar { transform: translateX(0); }
+  .sidebar-scrim {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 25;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  body.sidebar-open .sidebar-scrim { opacity: 1; pointer-events: auto; }
+  /* A collapsed-to-rail sidebar makes no sense as a drawer -- there is
+     nothing beside it to save room for -- so the drawer always opens at
+     full width regardless of the desktop rail state carried over in
+     localStorage. */
+  body.sidebar-collapsed .sidebar { width: 84vw; max-width: 320px; padding: 12px 8px; }
+  body.sidebar-collapsed .sidebar__label { display: block; }
+
+  /* .layout's align-items:flex-start (further up) is right for the desktop
+     row layout -- it lets each column take its own height instead of being
+     stretched to match the tallest one -- but flex-direction:column just
+     above turned that into a *width* rule instead: without a width of its
+     own, .content shrinks to fit whatever it contains, and a code block with
+     one long line (raise ValueError(...), a long print output, ...) drags
+     the whole page open sideways rather than scrolling inside itself. */
+  .content { width: 100%; padding: 20px 20px 56px; }
+  .step__title { font-size: 28px; }
+  .step__body p, .step__body ul, .step__body ol { font-size: 17px; }
+  /* Stacked single column at this width: there is nothing to drag a border
+     between, and there is no room beside the slide for a docked panel. The
+     explanation becomes a bottom sheet instead -- it still stays open, but
+     across the bottom rather than over the whole page, so the slide it is
+     explaining is still on screen above it. */
+  .resizer { display: none; }
+  .notes-panel {
+    top: auto;
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: none;
+    height: 55vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+  }
+  body.notes-open {
+    padding-right: 0;
+    padding-bottom: 55vh;
+  }
+  /* Narrower than this, topbar__left's title/course text (which shrinks to
+     0 via overflow:hidden) loses the fight for space against the topbar's
+     right-hand controls (which can't shrink below their own text) and gets
+     squeezed to nothing, painting on top of everything else. Drop the
+     lecture title and crest first -- the course name and controls are what
+     actually matter for using the page at this width. */
+  .topbar__crest, .topbar__title, .topbar__sep { display: none; }
+
+  /* Even with the title and crest gone, a long arc name plus the counter
+     plus all five right-hand controls (mode switch, font switch, theme
+     switch, AI Explanation, Present) do not reliably fit one 28px-tall row
+     on a phone -- at best they clip against the edge, at worst they overflow
+     it invisibly. Letting the row wrap is the fix; the topbar's fixed height
+     only ever suited a single line, so it has to become auto here too, and
+     everything that offset itself against the old fixed --topbar-h (the
+     drawer and its scrim, above) is written against the viewport instead so
+     it does not care how tall the topbar ends up being. */
+  .topbar {
+    height: auto;
+    min-height: var(--topbar-h);
+    flex-wrap: wrap;
+    row-gap: 6px;
+    padding: 6px 12px;
+  }
+  /* Without min-width:0 a flex item defaults to the content's unwrapped
+     width as its minimum size, so topbar__right would rather overflow the
+     topbar than actually use the wrapping declared above. */
+  .topbar__right { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; min-width: 0; width: 100%; }
+}

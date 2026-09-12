@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dart Fundamentals · Software Development for Mobile Devices</title>
+<meta name="description" content="Values, collections, and control flow">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:theme');
+    var theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:mode');
+    var mode = (saved === 'workbook' || saved === 'answers') ? saved : 'slides';
+    document.documentElement.setAttribute('data-mode', mode);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:fontsize');
+    var size = (saved === 'small' || saved === 'large') ? saved : 'medium';
+    document.documentElement.setAttribute('data-font-size', size);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="icon-btn icon-btn--menu" id="btn-sidebar-toggle" title="Contents" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+    <span class="topbar__crest"><img src="../assets/img/mun-logo.png" alt="Memorial University" class="topbar__logo"></span>
+    <a class="topbar__course" href="../index.html">Software Development for Mobile Devices</a>
+    <span class="topbar__sep">/</span>
+    <span class="topbar__title">L2: Dart Fundamentals</span>
+  </div>
+  <div class="topbar__right">
+    <span class="topbar__arc" id="arc"></span>
+    <span class="topbar__counter" id="counter"></span>
+    <div class="mode-switch" id="mode-switch">
+      <button class="mode-btn" data-mode-btn="slides" title="Slides -- teaching content only (S)">Slides</button>
+      <button class="mode-btn" data-mode-btn="workbook" title="Workbook -- + questions, blank answers (W)">Workbook</button>
+      <button class="mode-btn" data-mode-btn="answers" title="Workbook + Solutions (A)">Answers</button>
+    </div>
+    <div class="font-switch" id="font-switch">
+      <button class="font-btn" data-font-btn="small" title="Small text">S</button>
+      <button class="font-btn" data-font-btn="medium" title="Medium text">M</button>
+      <button class="font-btn" data-font-btn="large" title="Large text (default)">L</button>
+    </div>
+    <button class="theme-switch" id="btn-theme" title="Toggle light / dark (T / D)" aria-pressed="false">
+      <span class="theme-switch__track"><span class="theme-switch__thumb"></span></span>
+    </button>
+    <button class="icon-btn" id="btn-notes" title="Toggle AI Explanation (N)">AI Explanation</button>
+    <button class="icon-btn" id="btn-present" title="Present, full screen (F)">Present</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar__arc">Dart Programs</div>
+    <button class="sidebar__item" data-index="0" title="Overview of Dart"><span class="sidebar__bullet">1</span><span class="sidebar__label">Overview of Dart</span></button>
+    <button class="sidebar__item" data-index="1" title="Hello World"><span class="sidebar__bullet">2</span><span class="sidebar__label">Hello World</span></button>
+    <div class="sidebar__arc">Variables and Types</div>
+    <button class="sidebar__item" data-index="2" title="Basic Types"><span class="sidebar__bullet">3</span><span class="sidebar__label">Basic Types</span></button>
+    <button class="sidebar__item" data-index="3" title="Basic Type Reference"><span class="sidebar__bullet">4</span><span class="sidebar__label">Basic Type Reference</span></button>
+    <button class="sidebar__item" data-index="4" title="Strings and Interpolation"><span class="sidebar__bullet">5</span><span class="sidebar__label">Strings and Interpolation</span></button>
+    <button class="sidebar__item" data-index="5" title="Variables and Assignment"><span class="sidebar__bullet">6</span><span class="sidebar__label">Variables and Assignment</span></button>
+    <button class="sidebar__item" data-index="6" title="Final Variables"><span class="sidebar__bullet">7</span><span class="sidebar__label">Final Variables</span></button>
+    <button class="sidebar__item" data-index="7" title="Compile-Time Constants"><span class="sidebar__bullet">8</span><span class="sidebar__label">Compile-Time Constants</span></button>
+    <button class="sidebar__item" data-index="8" title="Late Initialization"><span class="sidebar__bullet">9</span><span class="sidebar__label">Late Initialization</span></button>
+    <div class="sidebar__arc">Lists</div>
+    <button class="sidebar__item" data-index="9" title="Creating Lists"><span class="sidebar__bullet">10</span><span class="sidebar__label">Creating Lists</span></button>
+    <button class="sidebar__item" data-index="10" title="Indexing"><span class="sidebar__bullet">11</span><span class="sidebar__label">Indexing</span></button>
+    <button class="sidebar__item" data-index="11" title="Index Range"><span class="sidebar__bullet">12</span><span class="sidebar__label">Index Range</span></button>
+    <button class="sidebar__item" data-index="12" title="Adding and Removing Elements"><span class="sidebar__bullet">13</span><span class="sidebar__label">Adding and Removing Elements</span></button>
+    <button class="sidebar__item" data-index="13" title="List Information"><span class="sidebar__bullet">14</span><span class="sidebar__label">List Information</span></button>
+    <button class="sidebar__item" data-index="14" title="Lists and Mutability"><span class="sidebar__bullet">15</span><span class="sidebar__label">Lists and Mutability</span></button>
+    <div class="sidebar__arc">Sets and Maps</div>
+    <button class="sidebar__item" data-index="15" title="Sets"><span class="sidebar__bullet">16</span><span class="sidebar__label">Sets</span></button>
+    <button class="sidebar__item" data-index="16" title="Maps"><span class="sidebar__bullet">17</span><span class="sidebar__label">Maps</span></button>
+    <button class="sidebar__item" data-index="17" title="Map Lookup"><span class="sidebar__bullet">18</span><span class="sidebar__label">Map Lookup</span></button>
+    <button class="sidebar__item" data-index="18" title="Choosing a Collection"><span class="sidebar__bullet">19</span><span class="sidebar__label">Choosing a Collection</span></button>
+    <div class="sidebar__arc">Control Flow</div>
+    <button class="sidebar__item" data-index="19" title="If-Else Statements"><span class="sidebar__bullet">20</span><span class="sidebar__label">If-Else Statements</span></button>
+    <button class="sidebar__item" data-index="20" title="For Loops"><span class="sidebar__bullet">21</span><span class="sidebar__label">For Loops</span></button>
+    <button class="sidebar__item" data-index="21" title="Iterating Through Collections"><span class="sidebar__bullet">22</span><span class="sidebar__label">Iterating Through Collections</span></button>
+    <button class="sidebar__item" data-index="22" title="While Loops"><span class="sidebar__bullet">23</span><span class="sidebar__label">While Loops</span></button>
+    <button class="sidebar__item" data-index="23" title="Do-While Loops"><span class="sidebar__bullet">24</span><span class="sidebar__label">Do-While Loops</span></button>
+    <button class="sidebar__item" data-index="24" title="Switch-Case Statements"><span class="sidebar__bullet">25</span><span class="sidebar__label">Switch-Case Statements</span></button>
+    <button class="sidebar__item" data-index="25" title="Try It: Control Flow"><span class="sidebar__bullet">26</span><span class="sidebar__label">Try It: Control Flow</span></button>
+    <div class="sidebar__arc">Study Reference</div>
+    <button class="sidebar__item" data-index="26" title="Reference"><span class="sidebar__bullet">27</span><span class="sidebar__label">Reference</span></button>
+  </nav>
+  <div class="sidebar-scrim" id="sidebar-scrim"></div>
+  <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0"
+       title="Drag to resize, double-click to collapse"></div>
+
+  <main class="content">
+    <div class="steps" id="steps">
+      <section class="step" data-index="0">
+  <h2 class="step__title">Overview of Dart</h2>
+  <div class="step__body">
+    <div class="docblock docblock--outcomes">
+      <div class="docblock__label">Learning outcomes</div>
+      <div class="docblock__body"><p>By the end of this lecture, you should be able to:</p>
+<ul><li>trace assignments and distinguish <code>var</code>, <code>final</code>, <code>const</code>, and <code>late</code>;</li><li>read basic Dart types and string interpolation;</li><li>choose a list, set, or map for a small data problem;</li><li>trace collection access and simple updates;</li><li>trace branches and loops, including their boundary cases.</li></ul></div>
+    </div><p>Dart is a programming language developed by Google for applications across platforms. It is the language used by Flutter.</p>
+<ul><li>Static type checking checks whether values are used with suitable types.</li><li>Just-in-Time (JIT) compilation compiles code while a program runs.</li><li>Ahead-of-Time (AOT) compilation compiles code before a program runs.</li><li>Garbage collection manages memory that a program no longer needs.</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="1">
+  <h2 class="step__title">Hello World</h2>
+  <div class="step__body">
+    <pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;Hello, World!&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Hello, World!</code></pre>
+<p><code>main()</code> is the program's entry point. Its body is the code between <code>{</code> and <code>}</code>. <code>void</code> means that it returns no value. <code>print()</code> displays a value in the console. Later code blocks are independent fragments to place inside <code>main()</code>.</p>
+<p><a href="https://dartpad.dev/?id=9cbf11407a3354a6f5e442305472ea3b&amp;run=true" target="_blank" rel="noopener">Open the Dart Programs example in DartPad</a></p>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>If the <code>print()</code> line appears twice inside <code>main()</code>, how many output lines are produced?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>Two. The statements run in order, and each call prints <code>Hello, World!</code> on its own line.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="2">
+  <h2 class="step__title">Basic Types</h2>
+  <div class="step__body">
+    <p>A type describes the kind of value a variable can hold.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> name = <span class="tok-string">&#x27;Voyager I&#x27;</span>;
+<span class="tok-type">int</span> year = <span class="tok-number">1977</span>;
+<span class="tok-type">double</span> diameter = <span class="tok-number">3.7</span>;
+<span class="tok-type">bool</span> launched = <span class="tok-keyword">true</span>;
+<span class="tok-type">num</span> distance = <span class="tok-number">42</span>;
+distance = <span class="tok-number">42.5</span>;</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="3">
+  <h2 class="step__title">Basic Type Reference</h2>
+  <div class="step__body">
+    <div class="table-wrap"><table><thead><tr><th>Type</th><th>Values</th></tr></thead><tbody><tr><td><code>int</code></td><td>Integers, such as <code>1977</code></td></tr><tr><td><code>double</code></td><td>Floating-point numbers, such as <code>3.7</code></td></tr><tr><td><code>num</code></td><td>Either <code>int</code> or <code>double</code></td></tr><tr><td><code>String</code></td><td>Text</td></tr><tr><td><code>bool</code></td><td><code>true</code> or <code>false</code></td></tr></tbody></table></div>
+  </div>
+  
+</section>
+    <section class="step" data-index="4">
+  <h2 class="step__title">Strings and Interpolation</h2>
+  <div class="step__body">
+    <p>String interpolation inserts a value into text. Use <code>$name</code> for a variable and <code>${expression}</code> for a calculation or other expression.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> name = <span class="tok-string">&#x27;Voyager&#x27;</span>;
+<span class="tok-keyword">var</span> year = <span class="tok-number">1977</span>;
+<span class="tok-function">print</span>(<span class="tok-string">&#x27;$name launched in $year&#x27;</span>);
+<span class="tok-function">print</span>(<span class="tok-string">&quot;The following year was ${year + 1}&quot;</span>);</code></pre>
+<pre class="code-block" data-lang="text"><code>Voyager launched in 1977
+The following year was 1978</code></pre>
+<p>Single and double quotes both create strings.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="5">
+  <h2 class="step__title">Variables and Assignment</h2>
+  <div class="step__body">
+    <p>With <code>var</code>, Dart infers the type from the initial value. Omitting the written type does not remove type checking.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> name = <span class="tok-string">&#x27;John&#x27;</span>; <span class="tok-comment">// Inferred type: String</span>
+name = <span class="tok-string">&#x27;Jane&#x27;</span>;    <span class="tok-comment">// Allowed</span>
+<span class="tok-function">print</span>(name);</code></pre>
+<pre class="code-block" data-lang="text"><code>Jane</code></pre>
+<p>This separate fragment has a type error:</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> name = <span class="tok-string">&#x27;John&#x27;</span>;
+name = <span class="tok-number">42</span>; <span class="tok-comment">// Error: an int cannot be assigned to String.</span></code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="6">
+  <h2 class="step__title">Final Variables</h2>
+  <div class="step__body">
+    <p>A <code>final</code> variable can be assigned once. Its value may be determined at runtime, while the program is running.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">final</span> name = <span class="tok-string">&#x27;John&#x27;</span>;
+<span class="tok-function">print</span>(name);
+<span class="tok-keyword">final</span> now = <span class="tok-type">DateTime</span>.<span class="tok-function">now</span>();</code></pre>
+<pre class="code-block" data-lang="text"><code>John</code></pre>
+<p>Adding <code>name = 'Jane';</code> would be an error. <code>DateTime.now()</code> obtains the current date and time, so <code>now</code> is determined when this code runs.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="7">
+  <h2 class="step__title">Compile-Time Constants</h2>
+  <div class="step__body">
+    <p>A <code>const</code> variable has a value that can be determined at compile time, before execution. It cannot be reassigned.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">const</span> pi = <span class="tok-number">3.14</span>;
+<span class="tok-keyword">const</span> radius = <span class="tok-number">5</span>;
+<span class="tok-keyword">const</span> area = pi * radius * radius;
+<span class="tok-function">print</span>(area);</code></pre>
+<pre class="code-block" data-lang="text"><code>78.5</code></pre>
+<p>This declaration is rejected:</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">const</span> now = <span class="tok-type">DateTime</span>.<span class="tok-function">now</span>(); <span class="tok-comment">// Error: not a constant expression.</span></code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="8">
+  <h2 class="step__title">Late Initialization</h2>
+  <div class="step__body">
+    <p><code>late</code> allows a declaration whose initialization will be checked at runtime. The value must be assigned before it is read.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">late</span> <span class="tok-type">String</span> description;
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  description = <span class="tok-string">&#x27;A small planet&#x27;</span>;
+  <span class="tok-function">print</span>(description);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>A small planet</code></pre>
+<p><code>String</code> here is non-nullable: it cannot hold <code>null</code>, the value representing absence. <code>late</code> does not supply a string or make the type nullable.</p>
+<p><a href="https://dartpad.dev/?id=d11ae5c9ba3f3b3d0c56572972cbd57c&amp;run=true" target="_blank" rel="noopener">Open the Variables and Types example in DartPad</a></p>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>What happens when the assignment to <code>description</code> is removed?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>Reading the uninitialized <code>late</code> variable fails with a <code>LateInitializationError</code>. There is no string to print.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="9">
+  <h2 class="step__title">Creating Lists</h2>
+  <div class="step__body">
+    <p>A list stores elements in order. It can contain repeated values, and elements can be accessed by position.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Earth&#x27;</span>, <span class="tok-string">&#x27;Mars&#x27;</span>, <span class="tok-string">&#x27;Earth&#x27;</span>];
+<span class="tok-type">List</span>&lt;<span class="tok-type">String</span>&gt; moons = [<span class="tok-string">&#x27;Luna&#x27;</span>, <span class="tok-string">&#x27;Phobos&#x27;</span>];
+<span class="tok-keyword">var</span> empty = &lt;<span class="tok-type">int</span>&gt;[];
+<span class="tok-function">print</span>(planets);
+<span class="tok-function">print</span>(empty.length);</code></pre>
+<pre class="code-block" data-lang="text"><code>[Earth, Mars, Earth]
+0</code></pre>
+<p><code>List&lt;String&gt;</code> means a list whose elements are strings. <code>&lt;int&gt;[]</code> creates an empty list of integers.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="10">
+  <h2 class="step__title">Indexing</h2>
+  <div class="step__body">
+    <p>An index is an element's position. List indexes start at zero.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Mercury&#x27;</span>, <span class="tok-string">&#x27;Venus&#x27;</span>, <span class="tok-string">&#x27;Earth&#x27;</span>];
+<span class="tok-function">print</span>(planets[<span class="tok-number">2</span>]);
+planets[<span class="tok-number">0</span>] = <span class="tok-string">&#x27;Mars&#x27;</span>;
+<span class="tok-function">print</span>(planets.first);
+<span class="tok-function">print</span>(planets.last);</code></pre>
+<pre class="code-block" data-lang="text"><code>Earth
+Mars
+Earth</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="11">
+  <h2 class="step__title">Index Range</h2>
+  <div class="step__body">
+    <div class="table-wrap"><table><thead><tr><th>Index</th><th><code>0</code></th><th><code>1</code></th><th><code>2</code></th></tr></thead><tbody><tr><td>Initial element</td><td>Mercury</td><td>Venus</td><td>Earth</td></tr></tbody></table></div>
+<p>For a nonempty list, the last index is <code>length - 1</code>. Index <code>3</code> is outside this three-element list.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="12">
+  <h2 class="step__title">Adding and Removing Elements</h2>
+  <div class="step__body">
+    <p>These operations change the list. <code>add</code> appends a value; <code>remove</code> removes the first matching value.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Earth&#x27;</span>, <span class="tok-string">&#x27;Mars&#x27;</span>, <span class="tok-string">&#x27;Earth&#x27;</span>];
+planets.<span class="tok-function">add</span>(<span class="tok-string">&#x27;Venus&#x27;</span>);
+planets.<span class="tok-function">remove</span>(<span class="tok-string">&#x27;Earth&#x27;</span>);
+<span class="tok-function">print</span>(planets);
+<span class="tok-function">print</span>(planets.length);</code></pre>
+<pre class="code-block" data-lang="text"><code>[Mars, Earth, Venus]
+3</code></pre>
+<p>Only the first <code>'Earth'</code> is removed. The study reference includes insertion, bulk addition, and removal by position.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="13">
+  <h2 class="step__title">List Information</h2>
+  <div class="step__body">
+    <pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Mercury&#x27;</span>, <span class="tok-string">&#x27;Venus&#x27;</span>, <span class="tok-string">&#x27;Earth&#x27;</span>];
+<span class="tok-function">print</span>(planets.isEmpty);
+<span class="tok-function">print</span>(planets.<span class="tok-function">contains</span>(<span class="tok-string">&#x27;Earth&#x27;</span>));
+<span class="tok-function">print</span>(planets.<span class="tok-function">indexOf</span>(<span class="tok-string">&#x27;Earth&#x27;</span>));
+<span class="tok-function">print</span>(planets.<span class="tok-function">indexOf</span>(<span class="tok-string">&#x27;Mars&#x27;</span>));</code></pre>
+<pre class="code-block" data-lang="text"><code>false
+true
+2
+-1</code></pre>
+<p><code>contains</code> answers a membership question. <code>indexOf</code> returns the first matching index, or <code>-1</code> when the value is absent.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="14">
+  <h2 class="step__title">Lists and Mutability</h2>
+  <div class="step__body">
+    <p>A mutable list is a list whose contents can change. Making its variable <code>final</code> prevents reassignment of the variable, but still allows changes to this list.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">final</span> planets = &lt;<span class="tok-type">String</span>&gt;[<span class="tok-string">&#x27;Earth&#x27;</span>, <span class="tok-string">&#x27;Mars&#x27;</span>];
+planets.<span class="tok-function">add</span>(<span class="tok-string">&#x27;Venus&#x27;</span>);
+<span class="tok-function">print</span>(planets);</code></pre>
+<pre class="code-block" data-lang="text"><code>[Earth, Mars, Venus]</code></pre>
+<p><a href="https://dartpad.dev/?id=2b66a403cff5235d690999c0dfe45efe&amp;run=true" target="_blank" rel="noopener">Open the Lists example in DartPad</a></p>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Why is <code>planets.add('Venus')</code> allowed, but <code>planets = ['Venus']</code> rejected?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p><code>add</code> changes the existing list. The assignment tries to make the final variable hold a different list, which is not allowed.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="15">
+  <h2 class="step__title">Sets</h2>
+  <div class="step__body">
+    <p>A set stores unique elements. Choose it when membership matters and repeated values should not create extra entries.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> elements = {<span class="tok-string">&#x27;Hydrogen&#x27;</span>, <span class="tok-string">&#x27;Helium&#x27;</span>};
+elements.<span class="tok-function">add</span>(<span class="tok-string">&#x27;Helium&#x27;</span>);
+<span class="tok-function">print</span>(elements.length);
+<span class="tok-function">print</span>(elements.<span class="tok-function">contains</span>(<span class="tok-string">&#x27;Helium&#x27;</span>));
+<span class="tok-type">Set</span>&lt;<span class="tok-type">String</span>&gt; nobles = {<span class="tok-string">&#x27;Neon&#x27;</span>, <span class="tok-string">&#x27;Argon&#x27;</span>};
+<span class="tok-keyword">var</span> emptySet = &lt;<span class="tok-type">String</span>&gt;{};</code></pre>
+<pre class="code-block" data-lang="text"><code>2
+true</code></pre>
+<p><code>&lt;String&gt;{}</code> creates an empty string set. By itself, <code>{}</code> creates an empty map. A set does not provide list-style indexes.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="16">
+  <h2 class="step__title">Maps</h2>
+  <div class="step__body">
+    <p>A map associates a key with a value. Each key identifies at most one entry.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> distances = {<span class="tok-string">&#x27;Earth&#x27;</span>: <span class="tok-number">1.0</span>, <span class="tok-string">&#x27;Mars&#x27;</span>: <span class="tok-number">1.52</span>};
+distances[<span class="tok-string">&#x27;Jupiter&#x27;</span>] = <span class="tok-number">5.2</span>;
+distances[<span class="tok-string">&#x27;Earth&#x27;</span>] = <span class="tok-number">1.01</span>;
+<span class="tok-function">print</span>(distances[<span class="tok-string">&#x27;Earth&#x27;</span>]);
+<span class="tok-function">print</span>(distances.length);</code></pre>
+<pre class="code-block" data-lang="text"><code>1.01
+3</code></pre>
+<p>The keys are planet names; the values are numeric distances. Assigning an existing key replaces its value. Assigning a new key adds an entry.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="17">
+  <h2 class="step__title">Map Lookup</h2>
+  <div class="step__body">
+    <p>A map lookup uses a key, not a numbered position. A missing key returns <code>null</code>.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">Map</span>&lt;<span class="tok-type">String</span>, <span class="tok-type">double</span>&gt; distances = {<span class="tok-string">&#x27;Earth&#x27;</span>: <span class="tok-number">1.0</span>};
+<span class="tok-function">print</span>(distances.<span class="tok-function">containsKey</span>(<span class="tok-string">&#x27;Earth&#x27;</span>));
+<span class="tok-function">print</span>(distances[<span class="tok-string">&#x27;Mars&#x27;</span>]);
+distances.<span class="tok-function">remove</span>(<span class="tok-string">&#x27;Earth&#x27;</span>);
+<span class="tok-function">print</span>(distances.length);
+<span class="tok-keyword">var</span> emptyMap = &lt;<span class="tok-type">String</span>, <span class="tok-type">int</span>&gt;{};</code></pre>
+<pre class="code-block" data-lang="text"><code>true
+null
+0</code></pre>
+<p><code>containsKey</code> checks whether an entry exists. <code>remove</code> removes the entry for a key.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="18">
+  <h2 class="step__title">Choosing a Collection</h2>
+  <div class="step__body">
+    <div class="table-wrap"><table><thead><tr><th>Need</th><th>Collection</th><th>Example</th></tr></thead><tbody><tr><td>Positions and possibly repeated values</td><td><code>List</code></td><td>An ordered list of planet names</td></tr><tr><td>Unique membership</td><td><code>Set</code></td><td>Elements present in a sample</td></tr><tr><td>Lookup by a key</td><td><code>Map</code></td><td>A distance for each planet name</td></tr></tbody></table></div>
+<p><a href="https://dartpad.dev/?id=397d5b5959afb89c68db02c0c577a0d4&amp;run=true" target="_blank" rel="noopener">Open the Sets and Maps example in DartPad</a></p>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Choose a collection for each task: an ordered record of planet observations with repeats; the distinct planets observed; a distance for each planet name.</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>Use a list for the ordered record, a set for distinct membership, and a map for distances looked up by name. The choice follows what must be preserved and how values will be found.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="19">
+  <h2 class="step__title">If-Else Statements</h2>
+  <div class="step__body">
+    <p>Control flow determines which statements run and how often. An <code>if</code> chain selects the first branch whose Boolean condition is true.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> year = <span class="tok-number">1977</span>;
+<span class="tok-keyword">if</span> (year &gt;= <span class="tok-number">2001</span>) {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;21st century&#x27;</span>);
+} <span class="tok-keyword">else</span> <span class="tok-keyword">if</span> (year &gt;= <span class="tok-number">1901</span>) {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;20th century&#x27;</span>);
+} <span class="tok-keyword">else</span> {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;Before 20th century&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>20th century</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="20">
+  <h2 class="step__title">For Loops</h2>
+  <div class="step__body">
+    <p>A loop repeats a body of code. This <code>for</code> loop has initialization, a condition, and an update.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">for</span> (<span class="tok-keyword">var</span> i = <span class="tok-number">0</span>; i &lt; <span class="tok-number">3</span>; i++) {
+  <span class="tok-function">print</span>(i);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>0
+1
+2</code></pre>
+<p>Initialize <code>i</code> once. Before each repetition, test <code>i &lt; 3</code>. After the body, <code>i++</code> increases <code>i</code> by one. When <code>i</code> reaches <code>3</code>, the condition is false.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="21">
+  <h2 class="step__title">Iterating Through Collections</h2>
+  <div class="step__body">
+    <p>A <code>for-in</code> loop takes one element at a time. Use an indexed <code>for</code> loop when the position is also needed.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Earth&#x27;</span>, <span class="tok-string">&#x27;Mars&#x27;</span>];
+<span class="tok-keyword">for</span> (<span class="tok-keyword">var</span> planet <span class="tok-keyword">in</span> planets) {
+  <span class="tok-function">print</span>(planet);
+}
+<span class="tok-keyword">for</span> (<span class="tok-keyword">var</span> i = <span class="tok-number">0</span>; i &lt; planets.length; i++) {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;$i: ${planets[i]}&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Earth
+Mars
+0: Earth
+1: Mars</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="22">
+  <h2 class="step__title">While Loops</h2>
+  <div class="step__body">
+    <p>A <code>while</code> loop tests its condition before each repetition. If the first test is false, its body never runs.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> year = <span class="tok-number">2023</span>;
+<span class="tok-keyword">while</span> (year &lt; <span class="tok-number">2025</span>) {
+  year += <span class="tok-number">1</span>;
+  <span class="tok-function">print</span>(year);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>2024
+2025</code></pre>
+<p><code>year += 1</code> adds one and assigns the result back to <code>year</code>. The body must make progress toward ending the loop.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="23">
+  <h2 class="step__title">Do-While Loops</h2>
+  <div class="step__body">
+    <p>A <code>do-while</code> loop runs its body before testing its condition, so the body runs at least once.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> year = <span class="tok-number">2000</span>;
+<span class="tok-keyword">do</span> {
+  year -= <span class="tok-number">1</span>;
+  <span class="tok-function">print</span>(year);
+} <span class="tok-keyword">while</span> (year &gt; <span class="tok-number">2000</span>);</code></pre>
+<pre class="code-block" data-lang="text"><code>1999</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Starting from <code>year = 2000</code>, how many times does each version run its body: <code>while (year &gt; 2000)</code> and <code>do ... while (year &gt; 2000)</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>The <code>while</code> body runs zero times because its first test is false. The <code>do-while</code> body runs once, subtracts one, and prints <code>1999</code>; its first test is then false.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="24">
+  <h2 class="step__title">Switch-Case Statements</h2>
+  <div class="step__body">
+    <p>A <code>switch</code> statement selects a case by value; <code>default</code> handles anything unmatched.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planet = <span class="tok-string">&#x27;Mars&#x27;</span>;
+<span class="tok-keyword">switch</span> (planet) {
+  <span class="tok-keyword">case</span> <span class="tok-string">&#x27;Earth&#x27;</span>:
+    <span class="tok-function">print</span>(<span class="tok-string">&#x27;Our home&#x27;</span>);
+    <span class="tok-keyword">break</span>;
+  <span class="tok-keyword">case</span> <span class="tok-string">&#x27;Mars&#x27;</span>:
+    <span class="tok-function">print</span>(<span class="tok-string">&#x27;The red planet&#x27;</span>);
+    <span class="tok-keyword">break</span>;
+  <span class="tok-keyword">default</span>:
+    <span class="tok-function">print</span>(<span class="tok-string">&#x27;Another planet&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>The red planet</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>What is printed for <code>'Venus'</code>, and would <code>'Earth'</code> also execute the default branch?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p><code>'Venus'</code> prints <code>Another planet</code>. <code>'Earth'</code> prints only <code>Our home</code>; execution leaves the switch after its matching case.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="25">
+  <h2 class="step__title">Try It: Control Flow</h2>
+  <div class="step__body">
+    <p><a href="https://dartpad.dev/?id=c23b0f26e5abfaa72a23d34fff6b4fff&amp;run=true" target="_blank" rel="noopener">Open the Control Flow example in DartPad</a></p>
+  </div>
+  
+</section>
+    <section class="step" data-index="26">
+  <h2 class="step__title">Reference</h2>
+  <div class="step__body">
+    <div class="docblock docblock--reference">
+      <div class="docblock__label">Reference</div>
+      <div class="docblock__body"><p>Less common operations are collected here for study outside class. Code blocks are independent fragments to put inside <code>main()</code>. Rows in each operation table describe separate operations on the stated collection, not a sequence to execute from top to bottom.</p>
+<h3>Dart Background</h3>
+<p>Dart supports web and mobile development, with a standard library and development tools. Its object-oriented model uses classes and single inheritance: a class can extend one superclass. JIT compiles during execution; AOT compiles ahead of execution. Garbage collection manages unused memory. Type inference lets a declaration omit a written type without removing static checking.</p>
+<h3>Declaration Choices</h3>
+<div class="table-wrap"><table><thead><tr><th>Declaration</th><th>Meaning and common use</th></tr></thead><tbody><tr><td><code>var name = 'John';</code></td><td>Infer the type; allow later assignment of compatible values.</td></tr><tr><td><code>final now = DateTime.now();</code></td><td>Assign once, including a value computed at runtime.</td></tr><tr><td><code>const pi = 3.14;</code></td><td>Require a compile-time constant. Constant values can also support compiler optimizations.</td></tr><tr><td><code>late String description;</code></td><td>Declare before initialization; reading too soon fails. Can support delayed or lazy initialization.</td></tr></tbody></table></div>
+<h3>List Operations</h3>
+<p>For each row, start with <code>var planets = ['Mercury', 'Venus', 'Earth', 'Mars'];</code>.</p>
+<div class="table-wrap"><table><thead><tr><th>Operation</th><th>Effect or result</th></tr></thead><tbody><tr><td><code>planets.add('Jupiter')</code></td><td>Append one element.</td></tr><tr><td><code>planets.insert(0, 'Sun')</code></td><td>Insert before the element at index zero; later positions shift.</td></tr><tr><td><code>planets.addAll(['Saturn', 'Uranus'])</code></td><td>Append both elements in order.</td></tr><tr><td><code>planets.remove('Venus')</code></td><td>Remove the first matching value.</td></tr><tr><td><code>planets.removeAt(0)</code></td><td>Remove Mercury by position.</td></tr><tr><td><code>planets.removeLast()</code></td><td>Remove Mars, the last element.</td></tr><tr><td><code>planets.clear()</code></td><td>Remove all elements.</td></tr><tr><td><code>planets.first</code> / <code>planets.last</code></td><td>Read Mercury / Mars; these require a nonempty list.</td></tr><tr><td><code>planets[2]</code></td><td>Read Earth; the index must be valid.</td></tr><tr><td><code>planets[0] = 'Mercury (updated)'</code></td><td>Replace the first element.</td></tr><tr><td><code>planets.length</code> / <code>planets.isEmpty</code></td><td>Read <code>4</code> / <code>false</code>.</td></tr><tr><td><code>planets.contains('Earth')</code></td><td>Read <code>true</code>.</td></tr><tr><td><code>planets.indexOf('Earth')</code></td><td>Read <code>2</code>; an absent value gives <code>-1</code>.</td></tr><tr><td><code>planets.sublist(0, 2)</code></td><td>Produce <code>[Mercury, Venus]</code>; the end index is excluded.</td></tr></tbody></table></div>
+<h3>Transforming Lists</h3>
+<p>A callback is a function passed to another operation. In <code>(p) =&gt; p.toUpperCase()</code>, <code>p</code> is a parameter, a name receiving a value when the function is called. <code>=&gt;</code> gives the expression returned by that function. <code>map</code> applies it to each element; <code>toList()</code> collects the resulting sequence into a list.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Mars&#x27;</span>, <span class="tok-string">&#x27;Earth&#x27;</span>];
+<span class="tok-keyword">var</span> uppercased = planets.<span class="tok-function">map</span>((p) =&gt; p.<span class="tok-function">toUpperCase</span>()).<span class="tok-function">toList</span>();
+<span class="tok-keyword">var</span> sortedPlanets = [...planets]..<span class="tok-function">sort</span>();
+<span class="tok-keyword">var</span> firstOne = planets.<span class="tok-function">sublist</span>(<span class="tok-number">0</span>, <span class="tok-number">1</span>);
+<span class="tok-function">print</span>(uppercased);
+<span class="tok-function">print</span>(sortedPlanets);
+<span class="tok-function">print</span>(firstOne);
+<span class="tok-function">print</span>(planets);</code></pre>
+<pre class="code-block" data-lang="text"><code>[MARS, EARTH]
+[Earth, Mars]
+[Mars]
+[Mars, Earth]</code></pre>
+<p><code>...planets</code> spreads the elements into a new list. The cascade <code>..sort()</code> calls <code>sort()</code> on that new list and keeps the list as the expression's result. <code>sort()</code> modifies its receiver in place; here the receiver is the copy. The original list remains in its original order. <code>sublist</code> also creates a new list for the selected range.</p>
+<h3>Alternative List Iteration</h3>
+<p><code>forEach</code> calls a callback for each element. Its arrow expression below calls <code>print</code>. <code>asMap()</code> exposes the list's indexes as map keys, so that map's <code>forEach</code> callback receives an index and an element.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = [<span class="tok-string">&#x27;Earth&#x27;</span>, <span class="tok-string">&#x27;Mars&#x27;</span>];
+planets.<span class="tok-function">forEach</span>((planet) =&gt; <span class="tok-function">print</span>(planet));
+planets.<span class="tok-function">asMap</span>().<span class="tok-function">forEach</span>((index, planet) =&gt;
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;Planet $index: $planet&#x27;</span>));</code></pre>
+<pre class="code-block" data-lang="text"><code>Earth
+Mars
+Planet 0: Earth
+Planet 1: Mars</code></pre>
+<h3>Set Operations</h3>
+<p>For each row, start with <code>var elements = {'Hydrogen', 'Helium'};</code>.</p>
+<div class="table-wrap"><table><thead><tr><th>Operation</th><th>Effect or result</th></tr></thead><tbody><tr><td><code>elements.add('Beryllium')</code></td><td>Add one member.</td></tr><tr><td><code>elements.addAll(['Boron', 'Carbon'])</code></td><td>Add the supplied members.</td></tr><tr><td><code>elements.remove('Hydrogen')</code></td><td>Remove that member.</td></tr><tr><td><code>elements.first</code></td><td>Read the first element in iteration order; requires a nonempty set.</td></tr><tr><td><code>elements.contains('Neon')</code></td><td>Read <code>false</code>.</td></tr><tr><td><code>elements.length</code></td><td>Read <code>2</code>.</td></tr></tbody></table></div>
+<p>Union contains members of either set. Intersection contains members of both. Difference contains members of the first set absent from the second. These operations return new sets.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> setA = {<span class="tok-string">&#x27;A&#x27;</span>, <span class="tok-string">&#x27;B&#x27;</span>, <span class="tok-string">&#x27;C&#x27;</span>};
+<span class="tok-keyword">var</span> setB = {<span class="tok-string">&#x27;B&#x27;</span>, <span class="tok-string">&#x27;C&#x27;</span>, <span class="tok-string">&#x27;D&#x27;</span>};
+<span class="tok-function">print</span>(setA.<span class="tok-function">union</span>(setB));
+<span class="tok-function">print</span>(setA.<span class="tok-function">intersection</span>(setB));
+<span class="tok-function">print</span>(setA.<span class="tok-function">difference</span>(setB));</code></pre>
+<pre class="code-block" data-lang="text"><code>{A, B, C, D}
+{B, C}
+{A}</code></pre>
+<p>These displayed orders are for the literal sets in this example. Membership, rather than numbered position, is the reason to choose a set.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> elements = {<span class="tok-string">&#x27;Hydrogen&#x27;</span>, <span class="tok-string">&#x27;Helium&#x27;</span>};
+<span class="tok-keyword">for</span> (<span class="tok-keyword">var</span> element <span class="tok-keyword">in</span> elements) {
+  <span class="tok-function">print</span>(element);
+}
+elements.<span class="tok-function">forEach</span>((element) =&gt; <span class="tok-function">print</span>(element));</code></pre>
+<pre class="code-block" data-lang="text"><code>Hydrogen
+Helium
+Hydrogen
+Helium</code></pre>
+<h3>Map Operations</h3>
+<p>For each row, start with <code>var planets = {'Earth': 1.0, 'Mars': 1.52};</code>.</p>
+<div class="table-wrap"><table><thead><tr><th>Operation</th><th>Effect or result</th></tr></thead><tbody><tr><td><code>planets['Jupiter'] = 5.2</code></td><td>Add the key, or replace its value if it exists.</td></tr><tr><td><code>planets.putIfAbsent('Saturn', () =&gt; 9.5)</code></td><td>Insert <code>9.5</code> only if Saturn is absent.</td></tr><tr><td><code>planets.remove('Earth')</code></td><td>Remove the Earth entry.</td></tr><tr><td><code>planets['Earth']</code></td><td>Read <code>1.0</code>; a missing key gives <code>null</code>.</td></tr><tr><td><code>planets.containsKey('Mars')</code></td><td>Read <code>true</code>.</td></tr><tr><td><code>planets.containsValue(1.0)</code></td><td>Read <code>true</code>.</td></tr><tr><td><code>planets.keys</code></td><td>Obtain the keys.</td></tr><tr><td><code>planets.values</code></td><td>Obtain the values.</td></tr><tr><td><code>planets.entries</code></td><td>Obtain entries, each with <code>key</code> and <code>value</code> properties.</td></tr><tr><td><code>planets.length</code></td><td>Read <code>2</code>.</td></tr></tbody></table></div>
+<p><code>() =&gt; 9.5</code> is a callback with no parameters. <code>putIfAbsent</code> calls it to obtain a value only when the key is absent. An existing key's value is kept.</p>
+<h3>Map Iteration</h3>
+<p>The keys form an iterable, a sequence that <code>for-in</code> can traverse. Entries let the body read both parts directly. Map <code>forEach</code> supplies the key and value as arguments to its callback.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> planets = {<span class="tok-string">&#x27;Earth&#x27;</span>: <span class="tok-number">1.0</span>, <span class="tok-string">&#x27;Mars&#x27;</span>: <span class="tok-number">1.52</span>};
+<span class="tok-keyword">for</span> (<span class="tok-keyword">var</span> key <span class="tok-keyword">in</span> planets.keys) {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;$key: ${planets[key]}&#x27;</span>);
+}
+planets.<span class="tok-function">forEach</span>((key, value) =&gt; <span class="tok-function">print</span>(<span class="tok-string">&#x27;$key: $value&#x27;</span>));
+<span class="tok-keyword">for</span> (<span class="tok-keyword">var</span> entry <span class="tok-keyword">in</span> planets.entries) {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;${entry.key}: ${entry.value}&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Earth: 1.0
+Mars: 1.52
+Earth: 1.0
+Mars: 1.52
+Earth: 1.0
+Mars: 1.52</code></pre>
+<p>All three forms visit the same entries. The first looks up each value by key; the other two provide the value along with the key.</p></div>
+    </div>
+  </div>
+  
+</section>
+    </div>
+
+    <div class="stepnav">
+      <button class="btn btn--ghost" id="btn-back">Back</button>
+      <button class="btn btn--primary" id="btn-next">Next</button>
+    </div>
+  </main>
+</div>
+
+<aside class="notes-panel" id="notes-panel">
+  <div class="resizer resizer--notes" id="notes-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0" title="Drag to resize"></div>
+  <div class="notes-panel__header">
+    <span>AI Explanation</span>
+    <button class="icon-btn icon-btn--close" id="btn-notes-close" title="Close (N)">Close</button>
+  </div>
+  <div class="notes-panel__body" id="notes-body">
+    <div class="note" data-index="0">
+  <h3 class="note__title">Overview of Dart</h3>
+  <p>Dart provides a standard library of commonly needed operations and tools for developing programs. It supports web and mobile development. Flutter supplies the user-interface toolkit; the examples here use Dart alone.</p>
+<p>Dart is object-oriented: classes describe kinds of objects, and single inheritance allows a class to extend one superclass. These are background features here, not prerequisites for tracing the examples. The core task is to follow values through a small program.</p>
+<p>A declaration may omit a written type annotation. Dart still checks types when it infers them from values.</p>
+</div>
+    <div class="note" data-index="1">
+  <h3 class="note__title">Hello World</h3>
+  <p>The text <code>'Hello, World!'</code> is the argument supplied to <code>print</code>: an argument is a value passed in a function call. <code>print</code> is a top-level function, so this call does not need an object before its name.</p>
+<p>The semicolon ends the statement. With two print statements, execution reaches the first, prints one line, and then reaches the second and prints another.</p>
+<p>In the remaining slides, code blocks are fragments to place inside <code>main()</code>, unless a complete <code>main()</code> is shown. Each fragment starts fresh; variables do not carry over from one slide to the next. Lines labelled as errors illustrate rejected or failing code.</p>
+</div>
+    <div class="note" data-index="2">
+  <h3 class="note__title">Basic Types</h3>
+  <p>A declaration introduces a variable. In <code>int year = 1977;</code>, <code>int</code> is the type, <code>year</code> is the name, and <code>1977</code> is the initial value. An assignment such as <code>distance = 42.5;</code> changes an existing variable's value.</p>
+</div>
+    <div class="note" data-index="3">
+  <h3 class="note__title">Basic Type Reference</h3>
+  <p>Both <code>int</code> and <code>double</code> are subtypes of <code>num</code>: a variable declared as <code>num</code> can hold either kind of number. A floating-point number represents a numeric value with a fractional part, subject to the representation's precision.</p>
+<p>The words <code>true</code> and <code>false</code> are Boolean values, not strings. Quoting <code>'true'</code> would make text instead.</p>
+</div>
+    <div class="note" data-index="4">
+  <h3 class="note__title">Strings and Interpolation</h3>
+  <p>The first print substitutes the current values of <code>name</code> and <code>year</code>. The second evaluates <code>year + 1</code>, then inserts the result. It does not assign that result back to <code>year</code>, which remains <code>1977</code>.</p>
+<p>An expression is code that produces a value. The braces after <code>$</code> mark the whole expression to evaluate. They are needed here because the insertion includes addition, not just a variable name.</p>
+</div>
+    <div class="note" data-index="5">
+  <h3 class="note__title">Variables and Assignment</h3>
+  <p>Type inference means that Dart determines a type without requiring you to write it. The first declaration has the same relevant type constraint as <code>String name = 'John';</code>.</p>
+<p>Changing the string value does not change the variable's type. The second fragment is rejected because <code>42</code> is an integer, not a string. Use <code>var</code> for local variables when the initial value makes the type clear.</p>
+</div>
+    <div class="note" data-index="6">
+  <h3 class="note__title">Final Variables</h3>
+  <p>The first assignment fixes which value <code>name</code> holds. A second assignment is rejected even if it supplies another string of the correct type.</p>
+<p>“Assigned once” describes the variable. It does not mean every object held by a final variable is unchangeable. We will examine that distinction with a list.</p>
+<p>The date and time are not printed here because the exact value changes from run to run. Use <code>final</code> when you do not intend to replace a variable's value after initialization.</p>
+</div>
+    <div class="note" data-index="7">
+  <h3 class="note__title">Compile-Time Constants</h3>
+  <p>Every value in the calculation of <code>area</code> is already constant. The calculation therefore meets the compile-time requirement.</p>
+<p>The current time is available only at runtime, so it can initialize a <code>final</code> variable but cannot initialize a <code>const</code> variable. Both prevent reassignment; <code>const</code> adds the requirement that the initial value be a constant expression. Fixed numeric values or configuration values are common uses.</p>
+</div>
+    <div class="note" data-index="8">
+  <h3 class="note__title">Late Initialization</h3>
+  <p>This complete program declares <code>description</code> outside <code>main</code>, at the top level. When <code>main</code> runs, it assigns a string and then reads it. Removing the assignment leaves the runtime check with no initialized value, so the read fails.</p>
+<p><code>late</code> is useful when initialization must happen after declaration. It can also support lazy initialization, where an initializer is evaluated when the value is first used. It is not required for every local variable declared before its assignment; Dart can sometimes establish that an ordinary local variable is assigned before use. It can also reject a definitely unassigned local <code>late</code> variable before execution; the shown top-level declaration demonstrates the runtime check.</p>
+<p>The declaration choices answer different questions: <code>var</code> asks Dart to infer a type, <code>final</code> prevents reassignment, <code>const</code> requires a compile-time constant, and <code>late</code> moves initialization checking to runtime.</p>
+</div>
+    <div class="note" data-index="9">
+  <h3 class="note__title">Creating Lists</h3>
+  <p>An element is one value in a collection. The repeated <code>'Earth'</code> is kept because lists do not require uniqueness.</p>
+<p>The initial values let Dart infer <code>List&lt;String&gt;</code> for <code>planets</code>. The explicit declaration for <code>moons</code> gives the same kind of element constraint. With an empty list, writing the element type states what may be added even though there are no initial values to infer it from.</p>
+<p>The ordinary list literals used here create growable lists, so their size can change. Lists are suitable for an ordered sequence, especially when positions or repeated values matter.</p>
+</div>
+    <div class="note" data-index="10">
+  <h3 class="note__title">Indexing</h3>
+  <p>The first read selects the third element. The assignment replaces the first element without changing the list's length. <code>first</code> and <code>last</code> then read the elements at the two ends.</p>
+</div>
+    <div class="note" data-index="11">
+  <h3 class="note__title">Index Range</h3>
+  <p>An empty list has no valid element index. Reading <code>first</code> or <code>last</code> also requires a nonempty list. A position outside the list does not produce an extra element; the access fails.</p>
+</div>
+    <div class="note" data-index="12">
+  <h3 class="note__title">Adding and Removing Elements</h3>
+  <p>After <code>add</code>, the list is <code>['Earth', 'Mars', 'Earth', 'Venus']</code>. Removing the first occurrence of <code>'Earth'</code> leaves the other occurrence in place. There are then three elements, with new indexes <code>0</code>, <code>1</code>, and <code>2</code>.</p>
+<p>A method is an operation called on a value, such as <code>planets.add(...)</code>. The dot connects the value to the operation. A property such as <code>length</code> is read without call parentheses.</p>
+</div>
+    <div class="note" data-index="13">
+  <h3 class="note__title">List Information</h3>
+  <p><code>isEmpty</code> asks whether the list has zero elements. <code>contains</code> asks whether at least one element matches the supplied value. Neither operation changes the list.</p>
+<p>The result <code>-1</code> is a missing-value signal from <code>indexOf</code>, not a valid list index. It must not be used as though it identified the last element.</p>
+</div>
+    <div class="note" data-index="14">
+  <h3 class="note__title">Lists and Mutability</h3>
+  <p>There are two separate things to track: the variable and the object it holds. The variable continues to refer to the same list after <code>add</code>. The list's contents and length have changed.</p>
+<p>This distinction is why “final means nothing can change” is too broad. For these list literals, final fixes the variable's assignment, not the contents of the list.</p>
+</div>
+    <div class="note" data-index="15">
+  <h3 class="note__title">Sets</h3>
+  <p>Adding <code>'Helium'</code> a second time leaves the set with two elements. Use a list if those two occurrences need to be represented separately.</p>
+<p>A set models membership rather than numbered positions. The literal sets used here do retain insertion order when iterated, but they still have no <code>elements[0]</code> operation.</p>
+<p>The study reference includes set union, intersection, and difference, which combine or compare membership.</p>
+</div>
+    <div class="note" data-index="16">
+  <h3 class="note__title">Maps</h3>
+  <p>The initial map has two entries. Adding <code>'Jupiter'</code> increases that count to three. Updating <code>'Earth'</code> changes its value without creating a second Earth entry.</p>
+<p>Dart infers <code>Map&lt;String, double&gt;</code> from these initial keys and values. The two type positions describe different roles, unlike the single element type in <code>List&lt;String&gt;</code> or <code>Set&lt;String&gt;</code>.</p>
+</div>
+    <div class="note" data-index="17">
+  <h3 class="note__title">Map Lookup</h3>
+  <p>There is no Mars entry, so the lookup reports absence with <code>null</code>. That is different from a list access beyond its bounds, which fails.</p>
+<p>Even though the stored values in <code>distances</code> are doubles, lookup must also allow for a missing key. This is the reason a lookup is not automatically a usable numeric value. Here we print it directly; no additional null-handling syntax is needed.</p>
+<p>The empty map declaration states that keys will be strings and values will be integers. The reference sheet includes access to all keys, values, and entries.</p>
+</div>
+    <div class="note" data-index="18">
+  <h3 class="note__title">Choosing a Collection</h3>
+  <p>The same subject can need different collections. An observation record must preserve repeated observations and their sequence, so a list fits. A set answers which planets appeared without counting repeats. A map answers a different question: what distance is associated with a particular name?</p>
+<p>Choose by the data's meaning and the operations needed, rather than by which brackets look familiar.</p>
+</div>
+    <div class="note" data-index="19">
+  <h3 class="note__title">If-Else Statements</h3>
+  <p><code>&gt;=</code> means “greater than or equal to”. The first comparison is false for <code>1977</code>, so execution proceeds to the second comparison. That comparison is true, so its body runs. The final <code>else</code> is skipped.</p>
+<p>Only one branch runs. For <code>2001</code>, both comparisons would be true if evaluated independently, but the first branch is selected and the later ones are skipped. The final <code>else</code> handles values that fail both conditions.</p>
+</div>
+    <div class="note" data-index="20">
+  <h3 class="note__title">For Loops</h3>
+  <p>A repetition is also called an iteration. The order is initialization, test, body, update, then back to the test. The update does not happen before the first body execution.</p>
+<p>The loop prints three values, even though the last printed value is two. Starting at zero and stopping before three is the same boundary pattern used by a three-element list's valid indexes.</p>
+</div>
+    <div class="note" data-index="21">
+  <h3 class="note__title">Iterating Through Collections</h3>
+  <p>The first loop assigns each successive element to <code>planet</code> and executes the body. It does not require you to maintain an index. A set can also be traversed with <code>for-in</code>.</p>
+<p>The second loop uses <code>i</code> both as a printed position and as an index. Its strict <code>&lt;</code> comparison matters: an index equal to <code>planets.length</code> would be outside the list.</p>
+<p>Map traversal uses keys or entries, rather than list indexes. The study reference shows those forms and the source's <code>forEach</code> alternatives.</p>
+</div>
+    <div class="note" data-index="22">
+  <h3 class="note__title">While Loops</h3>
+  <p>At the first test, <code>2023 &lt; 2025</code> is true. The body increments the year before printing, so the first printed value is <code>2024</code>. The next body execution prints <code>2025</code>. Only then does the next test fail.</p>
+<p>If <code>year</code> started at <code>2025</code>, the loop would print nothing. If the update were removed while <code>year</code> remained below <code>2025</code>, the condition would never become false and the loop would continue.</p>
+</div>
+    <div class="note" data-index="23">
+  <h3 class="note__title">Do-While Loops</h3>
+  <p><code>year -= 1</code> subtracts one and assigns the result back. The first action in the shown loop is this subtraction, not the comparison. By the time <code>year &gt; 2000</code> is evaluated, <code>year</code> is already <code>1999</code>.</p>
+<p>The placement of the condition changes the minimum number of executions. Use that placement as the first step when tracing either form.</p>
+</div>
+    <div class="note" data-index="24">
+  <h3 class="note__title">Switch-Case Statements</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+    <div class="note" data-index="25">
+  <h3 class="note__title">Try It: Control Flow</h3>
+  <p>The switch evaluates <code>planet</code> and selects the matching case. <code>'Mars'</code> selects the second case. A value such as <code>'Venus'</code> matches neither named case and selects <code>default</code>. Each shown <code>break</code> exits the switch.</p>
+<p>+++</p>
+<p>Use an <code>if</code> chain for the range comparisons shown with years, and this switch form for the named alternatives shown here. The explicit <code>break</code> statements make the exit visible. Do not infer that a nonempty case automatically runs the next case if one is omitted.</p>
+</div>
+    <div class="note" data-index="26">
+  <h3 class="note__title">Reference</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+  </div>
+</aside>
+
+<script>window.__ARC_NAMES__ = ["Dart Programs", "Dart Programs", "Variables and Types", "Variables and Types", "Variables and Types", "Variables and Types", "Variables and Types", "Variables and Types", "Variables and Types", "Lists", "Lists", "Lists", "Lists", "Lists", "Lists", "Sets and Maps", "Sets and Maps", "Sets and Maps", "Sets and Maps", "Control Flow", "Control Flow", "Control Flow", "Control Flow", "Control Flow", "Control Flow", "Control Flow", "Study Reference"];</script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

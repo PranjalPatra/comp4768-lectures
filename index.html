@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Development for Mobile Devices</title>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:theme');
+    var theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <span class="topbar__crest"><img src="assets/img/mun-logo.png" alt="Memorial University" class="topbar__logo"></span>
+    <span class="topbar__course">Software Development for Mobile Devices</span>
+  </div>
+  <div class="topbar__right">
+    <button class="theme-switch" id="btn-theme" title="Toggle light / dark (T / D)" aria-pressed="false">
+      <span class="theme-switch__track"><span class="theme-switch__thumb"></span></span>
+    </button>
+  </div>
+</header>
+<main class="content content--index">
+  <div class="index__crest"><img src="assets/img/mun-logo.png" alt="Memorial University"></div>
+  <h1>Software Development for Mobile Devices</h1>
+  <p class="index__desc">Dart and Flutter foundations for mobile application development with Firebase backend.</p>
+  <ul class="index__list">
+    <li class="index__row"><a class="index__link" href="l01-course-introduction/index.html"><span class="index__lecture">L1</span><span class="index__title">Course Introduction</span></a></li><li class="index__row"><a class="index__link" href="l02-dart-fundamentals/index.html"><span class="index__lecture">L2</span><span class="index__title">Dart Fundamentals</span></a></li>
+  </ul>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>
