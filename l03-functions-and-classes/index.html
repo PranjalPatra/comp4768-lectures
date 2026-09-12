@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions and Classes · Software Development for Mobile Devices</title>
+<meta name="description" content="Reusable behavior and object structure">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:theme');
+    var theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:mode');
+    var mode = (saved === 'workbook' || saved === 'answers') ? saved : 'slides';
+    document.documentElement.setAttribute('data-mode', mode);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:fontsize');
+    var size = (saved === 'small' || saved === 'large') ? saved : 'medium';
+    document.documentElement.setAttribute('data-font-size', size);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="icon-btn icon-btn--menu" id="btn-sidebar-toggle" title="Contents" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+    <span class="topbar__crest"><img src="../assets/img/mun-logo.png" alt="Memorial University" class="topbar__logo"></span>
+    <a class="topbar__course" href="../index.html">Software Development for Mobile Devices</a>
+    <span class="topbar__sep">/</span>
+    <span class="topbar__title">L3: Functions and Classes</span>
+  </div>
+  <div class="topbar__right">
+    <span class="topbar__arc" id="arc"></span>
+    <span class="topbar__counter" id="counter"></span>
+    <div class="mode-switch" id="mode-switch">
+      <button class="mode-btn" data-mode-btn="slides" title="Slides -- teaching content only (S)">Slides</button>
+      <button class="mode-btn" data-mode-btn="workbook" title="Workbook -- + questions, blank answers (W)">Workbook</button>
+      <button class="mode-btn" data-mode-btn="answers" title="Workbook + Solutions (A)">Answers</button>
+    </div>
+    <div class="font-switch" id="font-switch">
+      <button class="font-btn" data-font-btn="small" title="Small text">S</button>
+      <button class="font-btn" data-font-btn="medium" title="Medium text">M</button>
+      <button class="font-btn" data-font-btn="large" title="Large text (default)">L</button>
+    </div>
+    <button class="theme-switch" id="btn-theme" title="Toggle light / dark (T / D)" aria-pressed="false">
+      <span class="theme-switch__track"><span class="theme-switch__thumb"></span></span>
+    </button>
+    <button class="icon-btn" id="btn-notes" title="Toggle AI Explanation (N)">AI Explanation</button>
+    <button class="icon-btn" id="btn-present" title="Present, full screen (F)">Present</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar__arc">Functions</div>
+    <button class="sidebar__item" data-index="0" title="Functions"><span class="sidebar__bullet">1</span><span class="sidebar__label">Functions</span></button>
+    <button class="sidebar__item" data-index="1" title="Return Values and Void"><span class="sidebar__bullet">2</span><span class="sidebar__label">Return Values and Void</span></button>
+    <button class="sidebar__item" data-index="2" title="Function Tracing"><span class="sidebar__bullet">3</span><span class="sidebar__label">Function Tracing</span></button>
+    <div class="sidebar__arc">Parameters</div>
+    <button class="sidebar__item" data-index="3" title="Required Positional Parameters"><span class="sidebar__bullet">4</span><span class="sidebar__label">Required Positional Parameters</span></button>
+    <button class="sidebar__item" data-index="4" title="Optional Positional Parameters"><span class="sidebar__bullet">5</span><span class="sidebar__label">Optional Positional Parameters</span></button>
+    <button class="sidebar__item" data-index="5" title="Named Parameters"><span class="sidebar__bullet">6</span><span class="sidebar__label">Named Parameters</span></button>
+    <div class="sidebar__arc">Function Values</div>
+    <button class="sidebar__item" data-index="6" title="Functions as Values"><span class="sidebar__bullet">7</span><span class="sidebar__label">Functions as Values</span></button>
+    <button class="sidebar__item" data-index="7" title="Functions as Arguments"><span class="sidebar__bullet">8</span><span class="sidebar__label">Functions as Arguments</span></button>
+    <button class="sidebar__item" data-index="8" title="Arrow Functions"><span class="sidebar__bullet">9</span><span class="sidebar__label">Arrow Functions</span></button>
+    <div class="sidebar__arc">Classes and Objects</div>
+    <button class="sidebar__item" data-index="9" title="Class Structure"><span class="sidebar__bullet">10</span><span class="sidebar__label">Class Structure</span></button>
+    <button class="sidebar__item" data-index="10" title="Creating Objects"><span class="sidebar__bullet">11</span><span class="sidebar__label">Creating Objects</span></button>
+    <button class="sidebar__item" data-index="11" title="Fields and Methods"><span class="sidebar__bullet">12</span><span class="sidebar__label">Fields and Methods</span></button>
+    <button class="sidebar__item" data-index="12" title="Getters and Setters"><span class="sidebar__bullet">13</span><span class="sidebar__label">Getters and Setters</span></button>
+    <div class="sidebar__arc">Constructors</div>
+    <button class="sidebar__item" data-index="13" title="Generative Constructors"><span class="sidebar__bullet">14</span><span class="sidebar__label">Generative Constructors</span></button>
+    <button class="sidebar__item" data-index="14" title="Default Constructors"><span class="sidebar__bullet">15</span><span class="sidebar__label">Default Constructors</span></button>
+    <div class="sidebar__arc">Practice</div>
+    <button class="sidebar__item" data-practice data-index="15" title="Practice: Functions and Objects"><span class="sidebar__bullet">16</span><span class="sidebar__label">Practice: Functions and Objects</span></button>
+    <div class="sidebar__arc">Study Reference</div>
+    <button class="sidebar__item" data-index="16" title="Reference"><span class="sidebar__bullet">17</span><span class="sidebar__label">Reference</span></button>
+  </nav>
+  <div class="sidebar-scrim" id="sidebar-scrim"></div>
+  <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0"
+       title="Drag to resize, double-click to collapse"></div>
+
+  <main class="content">
+    <div class="steps" id="steps">
+      <section class="step" data-index="0">
+  <h2 class="step__title">Functions</h2>
+  <div class="step__body">
+    <div class="docblock docblock--outcomes">
+      <div class="docblock__label">Learning outcomes</div>
+      <div class="docblock__body"><p>By the end of this lecture, you should be able to:</p>
+<ul><li>define and call functions with typed parameters and return values;</li><li>choose positional, optional positional, and named parameters;</li><li>use anonymous and arrow functions as values and arguments;</li><li>create objects with fields, methods, getters, setters, and constructors.</li></ul></div>
+    </div><p>A function gives a name to a reusable block of code. Its declaration states the return type, function name, parameters, and body.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">int</span> <span class="tok-function">add</span>(<span class="tok-type">int</span> a, <span class="tok-type">int</span> b) {
+  <span class="tok-keyword">return</span> a + b;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> result = <span class="tok-function">add</span>(<span class="tok-number">7</span>, <span class="tok-number">5</span>);
+  <span class="tok-function">print</span>(result);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>12</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="1">
+  <h2 class="step__title">Return Values and Void</h2>
+  <div class="step__body">
+    <p>A function that produces a value declares its return type. A function that performs an action without producing a value uses <code>void</code>.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> <span class="tok-function">planetLabel</span>(<span class="tok-type">String</span> name) {
+  <span class="tok-keyword">return</span> <span class="tok-string">&#x27;Planet: $name&#x27;</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">showLabel</span>(<span class="tok-type">String</span> label) {
+  <span class="tok-function">print</span>(label);
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> label = <span class="tok-function">planetLabel</span>(<span class="tok-string">&#x27;Mars&#x27;</span>);
+  <span class="tok-function">showLabel</span>(label);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Planet: Mars</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="2">
+  <h2 class="step__title">Function Tracing</h2>
+  <div class="step__body">
+    <pre class="code-block" data-lang="dart"><code><span class="tok-type">int</span> <span class="tok-function">nextYear</span>(<span class="tok-type">int</span> year) {
+  <span class="tok-keyword">return</span> year + <span class="tok-number">1</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> year = <span class="tok-number">2026</span>;
+  <span class="tok-function">print</span>(<span class="tok-function">nextYear</span>(year));
+  <span class="tok-function">print</span>(year);
+}</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>What two values are printed? Does the call change the variable <code>year</code> in <code>main()</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>The program prints <code>2027</code> and then <code>2026</code>. The parameter receives the current integer value. Returning <code>year + 1</code> does not assign a new value to the caller's variable.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="3">
+  <h2 class="step__title">Required Positional Parameters</h2>
+  <div class="step__body">
+    <p>Required positional arguments are matched to parameters by position.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> <span class="tok-function">describePlanet</span>(<span class="tok-type">String</span> name, <span class="tok-type">int</span> moons) {
+  <span class="tok-keyword">return</span> <span class="tok-string">&#x27;$name has $moons moon(s).&#x27;</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">describePlanet</span>(<span class="tok-string">&#x27;Mars&#x27;</span>, <span class="tok-number">2</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Mars has 2 moon(s).</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="4">
+  <h2 class="step__title">Optional Positional Parameters</h2>
+  <div class="step__body">
+    <p>Square brackets make positional parameters optional. A default value is used when an argument is omitted.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> <span class="tok-function">greet</span>(<span class="tok-type">String</span> name, [<span class="tok-type">String</span> greeting = <span class="tok-string">&#x27;Hello&#x27;</span>]) {
+  <span class="tok-keyword">return</span> <span class="tok-string">&#x27;$greeting, $name!&#x27;</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">greet</span>(<span class="tok-string">&#x27;Alice&#x27;</span>));
+  <span class="tok-function">print</span>(<span class="tok-function">greet</span>(<span class="tok-string">&#x27;Bob&#x27;</span>, <span class="tok-string">&#x27;Hi&#x27;</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Hello, Alice!
+Hi, Bob!</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="5">
+  <h2 class="step__title">Named Parameters</h2>
+  <div class="step__body">
+    <p>Curly braces declare named parameters. A call supplies each argument with <code>parameterName: value</code>.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">createUser</span>({
+  <span class="tok-keyword">required</span> <span class="tok-type">String</span> name,
+  <span class="tok-type">int</span> age = <span class="tok-number">18</span>,
+  <span class="tok-type">String</span>? email,
+}) {
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;$name, $age, $email&#x27;</span>);
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">createUser</span>(name: <span class="tok-string">&#x27;Alice&#x27;</span>, age: <span class="tok-number">25</span>);
+  <span class="tok-function">createUser</span>(name: <span class="tok-string">&#x27;Bob&#x27;</span>);
+  <span class="tok-function">createUser</span>(age: <span class="tok-number">30</span>, name: <span class="tok-string">&#x27;Charlie&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Alice, 25, null
+Bob, 18, null
+Charlie, 30, null</code></pre>
+<p><code>String?</code> means the value may be <code>null</code>. Null is the subject of the next lecture.</p>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Which of these calls compile: <code>createUser(age: 20)</code>, <code>createUser('Alice')</code>, and <code>createUser(name: 'Al', 25)</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>None compile. The first omits required <code>name</code>. The second supplies a positional argument to a function with only named parameters. The third also supplies the required <code>name</code> incorrectly because <code>25</code> is an extra positional argument.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="6">
+  <h2 class="step__title">Functions as Values</h2>
+  <div class="step__body">
+    <p>An anonymous function is a function without a declared name. It can be stored in a variable and called through that variable.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> sayHello = (<span class="tok-type">String</span> name) {
+    <span class="tok-keyword">return</span> <span class="tok-string">&#x27;Hello, $name!&#x27;</span>;
+  };
+
+  <span class="tok-function">print</span>(<span class="tok-function">sayHello</span>(<span class="tok-string">&#x27;Dart&#x27;</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Hello, Dart!</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="7">
+  <h2 class="step__title">Functions as Arguments</h2>
+  <div class="step__body">
+    <p>An operation can receive a function and call it for each value. Such a received function is a callback.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> names = [<span class="tok-string">&#x27;alice&#x27;</span>, <span class="tok-string">&#x27;bob&#x27;</span>, <span class="tok-string">&#x27;charlie&#x27;</span>];
+  <span class="tok-keyword">var</span> upperCaseNames = names.<span class="tok-function">map</span>((name) {
+    <span class="tok-keyword">return</span> name.<span class="tok-function">toUpperCase</span>();
+  }).<span class="tok-function">toList</span>();
+
+  <span class="tok-function">print</span>(upperCaseNames);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>[ALICE, BOB, CHARLIE]</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="8">
+  <h2 class="step__title">Arrow Functions</h2>
+  <div class="step__body">
+    <p>Arrow syntax writes a function whose body is one expression. The expression's value is returned automatically.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> multiply = (<span class="tok-type">int</span> a, <span class="tok-type">int</span> b) =&gt; a * b;
+<span class="tok-keyword">var</span> doubled = [<span class="tok-number">1</span>, <span class="tok-number">2</span>, <span class="tok-number">3</span>].<span class="tok-function">map</span>((n) =&gt; n * <span class="tok-number">2</span>).<span class="tok-function">toList</span>();
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">multiply</span>(<span class="tok-number">5</span>, <span class="tok-number">3</span>));
+  <span class="tok-function">print</span>(doubled);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>15
+[2, 4, 6]</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Rewrite <code>aListOfStrings.any((s) { return s.isEmpty; })</code> with arrow syntax.</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p><code>aListOfStrings.any((s) =&gt; s.isEmpty)</code>. The expression <code>s.isEmpty</code> becomes the returned value for each callback call.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="9">
+  <h2 class="step__title">Class Structure</h2>
+  <div class="step__body">
+    <p>A class describes a kind of object. It can declare fields, constructors, and methods.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> Spacecraft {
+  <span class="tok-type">String</span> name;
+  <span class="tok-type">DateTime</span>? launchDate;
+
+  <span class="tok-function">Spacecraft</span>(<span class="tok-keyword">this</span>.name, <span class="tok-keyword">this</span>.launchDate);
+
+  <span class="tok-keyword">void</span> <span class="tok-function">describe</span>() {
+    <span class="tok-function">print</span>(<span class="tok-string">&#x27;Spacecraft: $name&#x27;</span>);
+  }
+}</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="10">
+  <h2 class="step__title">Creating Objects</h2>
+  <div class="step__body">
+    <p>Calling a constructor creates an object and returns a reference to it.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> Spacecraft {
+  <span class="tok-type">String</span> name;
+  <span class="tok-type">DateTime</span>? launchDate;
+
+  <span class="tok-function">Spacecraft</span>(<span class="tok-keyword">this</span>.name, <span class="tok-keyword">this</span>.launchDate);
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> voyager = <span class="tok-function">Spacecraft</span>(<span class="tok-string">&#x27;Voyager I&#x27;</span>, <span class="tok-type">DateTime</span>(<span class="tok-number">1977</span>, <span class="tok-number">9</span>, <span class="tok-number">5</span>));
+  <span class="tok-keyword">var</span> futureMission = <span class="tok-function">Spacecraft</span>(<span class="tok-string">&#x27;Europa Clipper&#x27;</span>, <span class="tok-keyword">null</span>);
+  <span class="tok-function">print</span>(voyager.name);
+  <span class="tok-function">print</span>(futureMission.launchDate);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Voyager I
+null</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="11">
+  <h2 class="step__title">Fields and Methods</h2>
+  <div class="step__body">
+    <p>Methods can read and change the fields of the object on which they are called.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> Counter {
+  <span class="tok-type">int</span> value = <span class="tok-number">0</span>;
+
+  <span class="tok-keyword">void</span> <span class="tok-function">increment</span>() {
+    value += <span class="tok-number">1</span>;
+  }
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> counter = <span class="tok-function">Counter</span>();
+  counter.<span class="tok-function">increment</span>();
+  counter.<span class="tok-function">increment</span>();
+  <span class="tok-function">print</span>(counter.value);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>2</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="12">
+  <h2 class="step__title">Getters and Setters</h2>
+  <div class="step__body">
+    <p>A getter reads a value like a property. A setter handles an assignment to a property. A leading <code>_</code> makes a member private to its file.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">import</span> <span class="tok-string">&#x27;dart:math&#x27;</span>;
+
+<span class="tok-keyword">class</span> Square {
+  <span class="tok-type">double</span> side;
+  <span class="tok-function">Square</span>(<span class="tok-keyword">this</span>.side);
+
+  <span class="tok-type">double</span> <span class="tok-keyword">get</span> area =&gt; side * side;
+
+  <span class="tok-keyword">set</span> <span class="tok-function">area</span>(<span class="tok-type">double</span> value) {
+    side = <span class="tok-function">sqrt</span>(value);
+  }
+}</code></pre>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> MyClass {
+  <span class="tok-type">int</span> value1 = <span class="tok-number">2</span>;
+  <span class="tok-type">int</span> value2 = <span class="tok-number">3</span>;
+  <span class="tok-type">int</span> value3 = <span class="tok-number">5</span>;
+
+  <span class="tok-type">int</span> <span class="tok-keyword">get</span> product =&gt; value1 * value2 * value3;
+  <span class="tok-keyword">void</span> <span class="tok-function">incrementValue1</span>() =&gt; value1++;
+}</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Does <code>square.area</code> call the getter or the setter? Which one runs for <code>square.area = 25</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>Reading <code>square.area</code> calls the getter. Assigning to <code>square.area</code> calls the setter with <code>25</code> as its argument.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="13">
+  <h2 class="step__title">Generative Constructors</h2>
+  <div class="step__body">
+    <p>A generative constructor creates a new instance and initializes its fields. Parameters beginning with <code>this.</code> assign directly to fields of the same name.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> MyColor {
+  <span class="tok-type">int</span> red;
+  <span class="tok-type">int</span> green;
+  <span class="tok-type">int</span> blue;
+
+  <span class="tok-function">MyColor</span>(<span class="tok-keyword">this</span>.red, <span class="tok-keyword">this</span>.green, <span class="tok-keyword">this</span>.blue);
+}</code></pre>
+<p>These are alternative named-parameter forms for the constructor:</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-function">MyColor</span>({<span class="tok-keyword">required</span> <span class="tok-keyword">this</span>.red, <span class="tok-keyword">required</span> <span class="tok-keyword">this</span>.green, <span class="tok-keyword">required</span> <span class="tok-keyword">this</span>.blue});
+
+<span class="tok-comment">// Or, with defaults:</span>
+<span class="tok-function">MyColor</span>({<span class="tok-keyword">this</span>.red = <span class="tok-number">0</span>, <span class="tok-keyword">this</span>.green = <span class="tok-number">0</span>, <span class="tok-keyword">this</span>.blue = <span class="tok-number">0</span>});</code></pre>
+<p><code>required</code> is explained in the next lecture.</p>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>For each constructor form shown, which calls compile: <code>MyColor(80, 80, 128)</code>, <code>MyColor(red: 80, green: 80, blue: 128)</code>, and <code>MyColor(red: 80)</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>The positional form accepts only the first call. The required named form accepts only the second. The defaulted named form accepts the second and third calls. Treat the constructor declarations as alternatives, since a class cannot declare all three as unnamed constructors at once.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="14">
+  <h2 class="step__title">Default Constructors</h2>
+  <div class="step__body">
+    <p>If a class declares no constructor, Dart supplies an unnamed constructor with no arguments.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> Point {
+  <span class="tok-type">double</span> x = <span class="tok-number">0</span>;
+  <span class="tok-type">double</span> y = <span class="tok-number">0</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> point = <span class="tok-function">Point</span>();
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;${point.x}, ${point.y}&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>0.0, 0.0</code></pre>
+<p>Non-nullable fields must still receive values before construction completes.</p>
+  </div>
+  
+</section>
+    <section class="step" data-practice data-index="15">
+  <h2 class="step__title">Practice: Functions and Objects</h2>
+  <div class="step__body">
+    
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><ol><li>Complete the arrow function: <code>String joinWithCommas(List&lt;String&gt; strings) =&gt; ____;</code></li><li>Write the one-line constructor for a class with fields <code>anInt</code>, <code>aString</code>, and <code>aDouble</code> by completing <code>MyClass(____);</code>.</li><li>Fill in the result for each call.</li></ol>
+<div class="table-wrap"><table><thead><tr><th>Call</th><th>Result</th></tr></thead><tbody><tr><td><code>greet('Alice')</code></td><td>____</td></tr><tr><td><code>greet('Bob', 'Hi')</code></td><td>____</td></tr><tr><td><code>greet()</code></td><td>____</td></tr></tbody></table></div>
+<ol><li>For home study, trace the two calls to <code>formatMessage</code> on the reference page. Identify the required positional argument and the named arguments, then predict how changing the default <code>prefix</code> to <code>'Status: '</code> changes the first result.</li></ol>
+<p>Try the source exercises for <a href="https://dart.dev/resources/dart-cheatsheet#arrow-syntax" target="_blank" rel="noopener">Arrow syntax</a> and <a href="https://dart.dev/resources/dart-cheatsheet#using-this-in-a-constructor" target="_blank" rel="noopener">Using <code>this</code> in a constructor</a>.</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><ol><li><code>strings.join(',')</code>.</li><li><code>MyClass(this.anInt, this.aString, this.aDouble);</code>.</li><li>The first call returns <code>Hello, Alice!</code>; the second returns <code>Hi, Bob!</code>; <code>greet()</code> is rejected because the required positional argument <code>name</code> is missing.</li><li><code>'ready'</code> is the required positional argument. <code>uppercase: true</code> and <code>prefix: '&gt; '</code> are named arguments in the second call. With the changed default, the first call returns <code>Status: ready</code>.</li></ol></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="16">
+  <h2 class="step__title">Reference</h2>
+  <div class="step__body">
+    <div class="docblock docblock--reference">
+      <div class="docblock__label">Reference</div>
+      <div class="docblock__body"><p>Use this page to compare function and class syntax after the lecture. The examples are independent fragments unless they include <code>main()</code>.</p>
+<h3>Function Declarations</h3>
+<div class="table-wrap"><table><thead><tr><th>Form</th><th>Example</th><th>Meaning</th></tr></thead><tbody><tr><td>Required positional</td><td><code>add(int a, int b)</code></td><td>Arguments are required and matched by position.</td></tr><tr><td>Optional positional</td><td><code>greet(String name, [String greeting = 'Hello'])</code></td><td>Values in square brackets may be omitted.</td></tr><tr><td>Named</td><td><code>createUser({required String name, int age = 18})</code></td><td>Arguments use names; <code>required</code> makes one mandatory.</td></tr><tr><td>Mixed</td><td><code>formatMessage(String message, {bool uppercase = false})</code></td><td>Required positional values come before named values.</td></tr></tbody></table></div>
+<p>A declaration can combine required positional parameters with named parameters. It cannot combine optional positional parameters with named parameters.</p>
+<h3>Mixed Parameters</h3>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> <span class="tok-function">formatMessage</span>(
+  <span class="tok-type">String</span> message, {
+  <span class="tok-type">bool</span> uppercase = <span class="tok-keyword">false</span>,
+  <span class="tok-type">String</span> prefix = <span class="tok-string">&#x27;&#x27;</span>,
+}) {
+  <span class="tok-keyword">var</span> result = uppercase ? message.<span class="tok-function">toUpperCase</span>() : message;
+  <span class="tok-keyword">return</span> <span class="tok-string">&#x27;$prefix$result&#x27;</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">formatMessage</span>(<span class="tok-string">&#x27;ready&#x27;</span>));
+  <span class="tok-function">print</span>(<span class="tok-function">formatMessage</span>(<span class="tok-string">&#x27;ready&#x27;</span>, uppercase: <span class="tok-keyword">true</span>, prefix: <span class="tok-string">&#x27;&gt; &#x27;</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>ready
+&gt; READY</code></pre>
+<h3>Function Values</h3>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">var</span> block = (<span class="tok-type">int</span> n) {
+  <span class="tok-keyword">return</span> n * <span class="tok-number">2</span>;
+};
+<span class="tok-keyword">var</span> arrow = (<span class="tok-type">int</span> n) =&gt; n * <span class="tok-number">2</span>;
+<span class="tok-type">int</span> <span class="tok-type">Function</span>(<span class="tok-type">int</span>) operation = arrow;</code></pre>
+<p>A function value can be stored in a variable or passed as an argument. A callback is a function supplied to another operation. A higher-order function receives or returns a function.</p>
+<h3>Constructor Forms</h3>
+<div class="table-wrap"><table><thead><tr><th>Form</th><th>Example</th><th>Use</th></tr></thead><tbody><tr><td>Generative</td><td><code>MyColor(this.red, this.green, this.blue)</code></td><td>Create and initialize a new object.</td></tr><tr><td>Defaulted positional</td><td><code>MyColor([this.red = 0, this.green = 0, this.blue = 0])</code></td><td>Let callers omit values from the end of the argument list.</td></tr><tr><td>Default</td><td><code>Point()</code> supplied automatically</td><td>Available only when the class declares no constructor.</td></tr></tbody></table></div></div>
+    </div>
+  </div>
+  
+</section>
+    </div>
+
+    <div class="stepnav">
+      <button class="btn btn--ghost" id="btn-back">Back</button>
+      <button class="btn btn--primary" id="btn-next">Next</button>
+    </div>
+  </main>
+</div>
+
+<aside class="notes-panel" id="notes-panel">
+  <div class="resizer resizer--notes" id="notes-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0" title="Drag to resize"></div>
+  <div class="notes-panel__header">
+    <span>AI Explanation</span>
+    <button class="icon-btn icon-btn--close" id="btn-notes-close" title="Close (N)">Close</button>
+  </div>
+  <div class="notes-panel__body" id="notes-body">
+    <div class="note" data-index="0">
+  <h3 class="note__title">Functions</h3>
+  <p>The return type <code>int</code> appears before the name <code>add</code>. It promises that a completed call produces an integer. The parameters <code>int a</code> and <code>int b</code> introduce local names for the arguments supplied by the caller.</p>
+<p>Execution begins in <code>main()</code>. The call <code>add(7, 5)</code> assigns <code>7</code> to <code>a</code> and <code>5</code> to <code>b</code> for this call. The function evaluates <code>a + b</code>, returns <code>12</code>, and the assignment stores that value in <code>result</code>.</p>
+<p>The parameter is the name in the declaration. The argument is the value at the call site. Function declarations such as <code>add</code> normally appear outside <code>main()</code>.</p>
+</div>
+    <div class="note" data-index="1">
+  <h3 class="note__title">Return Values and Void</h3>
+  <p><code>planetLabel</code> creates and returns a string. Its call can therefore appear on the right side of an assignment. <code>showLabel</code> prints its argument and returns no value that the program uses.</p>
+<p>The declared return type lets Dart check every returned value. Returning an integer from <code>planetLabel</code> would be a type error because the declaration promises a <code>String</code>.</p>
+</div>
+    <div class="note" data-index="2">
+  <h3 class="note__title">Function Tracing</h3>
+  <p>The name <code>year</code> is used in two different scopes. The local variable in <code>main()</code> belongs to <code>main</code>. The parameter named <code>year</code> belongs to <code>nextYear</code> and receives the value <code>2026</code> for the call.</p>
+<p>The expression <code>year + 1</code> creates the returned value <code>2027</code>. No assignment changes the variable in <code>main()</code>, so the second print still reads <code>2026</code>.</p>
+</div>
+    <div class="note" data-index="3">
+  <h3 class="note__title">Required Positional Parameters</h3>
+  <p>The first argument supplies <code>name</code>, and the second supplies <code>moons</code>. Both are required, so omitting either argument is an error.</p>
+<p>Position carries meaning in this form. Reversing the arguments would fail here because <code>2</code> is not a <code>String</code> and <code>'Mars'</code> is not an <code>int</code>. When several arguments have the same type, reversing them may compile but still produce the wrong meaning.</p>
+</div>
+    <div class="note" data-index="4">
+  <h3 class="note__title">Optional Positional Parameters</h3>
+  <p><code>name</code> remains required. The parameter <code>greeting</code> is inside square brackets, so the caller may stop after the first argument. In that case, <code>greeting</code> receives <code>'Hello'</code>.</p>
+<p>The second call supplies a value for the optional position, replacing the default for that call. Optional positional parameters must come after the required positional parameters.</p>
+</div>
+    <div class="note" data-index="5">
+  <h3 class="note__title">Named Parameters</h3>
+  <p>The braces do not make every parameter optional. The <code>required</code> modifier means that a call must name <code>name</code>. The optional parameter <code>age</code> receives <code>18</code> when omitted, and the optional nullable parameter <code>email</code> receives <code>null</code> when omitted.</p>
+<p>Named arguments can appear in any order. The third valid call writes <code>age</code> first even though <code>name</code> appears first in the declaration. Dart matches by name rather than position.</p>
+</div>
+    <div class="note" data-index="6">
+  <h3 class="note__title">Functions as Values</h3>
+  <p>The expression beginning with <code>(String name)</code> creates a function value. The assignment stores that value in <code>sayHello</code>. Parentheses after the variable name call the stored function.</p>
+<p>Anonymous functions are also called lambdas or closures. They are useful when a short piece of behavior is needed locally or passed to another operation.</p>
+<p>A function type can state the parameter types and return type explicitly. For example, <code>int Function(int, int) operation = add;</code> stores a function that receives two integers and returns an integer. The assignment stores the function itself because there are no call parentheses after <code>add</code>.</p>
+</div>
+    <div class="note" data-index="7">
+  <h3 class="note__title">Functions as Arguments</h3>
+  <p><code>map</code> takes one list element at a time and passes it to the anonymous function. That function returns an uppercase string. <code>map</code> produces those returned values in the same order, and <code>toList()</code> collects them into a list.</p>
+<p>An operation that receives or returns a function is called a higher-order function. The callback gives <code>map</code> the specific transformation to perform.</p>
+</div>
+    <div class="note" data-index="8">
+  <h3 class="note__title">Arrow Functions</h3>
+  <p>The syntax <code>=&gt; expression</code> is equivalent to a block containing <code>return expression;</code>. It is suitable only when the function body is a single expression.</p>
+<p>Arrow syntax changes the form, not the meaning. Use a block when the function needs several statements or when the steps are clearer when written separately.</p>
+</div>
+    <div class="note" data-index="9">
+  <h3 class="note__title">Class Structure</h3>
+  <p>The fields <code>name</code> and <code>launchDate</code> store data for each object. The constructor has the same name as the class and initializes those fields. The method <code>describe</code> defines behavior available on each <code>Spacecraft</code> object.</p>
+<p><code>DateTime?</code> allows the launch date to be absent. Each object gets its own field values.</p>
+</div>
+    <div class="note" data-index="10">
+  <h3 class="note__title">Creating Objects</h3>
+  <p>The first call creates an object whose two fields receive the supplied values. The second creates a different object and uses <code>null</code> for its nullable launch date.</p>
+<p>The dot reads a member of an object. <code>voyager.name</code> and <code>futureMission.launchDate</code> refer to fields in different objects even though both objects share the same class definition.</p>
+</div>
+    <div class="note" data-index="11">
+  <h3 class="note__title">Fields and Methods</h3>
+  <p>Because <code>Counter</code> declares no constructor, Dart supplies a default no-argument constructor. The field initializer sets <code>value</code> to zero before the object is used.</p>
+<p>Each call to <code>increment</code> runs with <code>counter</code> as the current object and adds one to that object's field. A second <code>Counter()</code> object would have a separate <code>value</code> starting at zero.</p>
+</div>
+    <div class="note" data-index="12">
+  <h3 class="note__title">Getters and Setters</h3>
+  <p>The getter has no call parentheses at the use site. It calculates an area from the current side length. The setter receives the assigned area and changes <code>side</code> so the square has that area.</p>
+<p>Both <code>product</code> and <code>incrementValue1</code> use arrow syntax because each body contains one expression. The expression after <code>=&gt;</code> is returned by the getter. The <code>void</code> method performs the increment and does not return a value for the caller to use.</p>
+<p>The source used a rectangle whose area setter changed both dimensions. This square version preserves a clear relationship between the stored side and computed area. The <code>sqrt</code> function comes from <code>dart:math</code>.</p>
+<p>The underscore privacy rule applies at the library level. In this single-file example, saying private to its file is the useful first approximation. Libraries and imports are introduced when the course begins multi-file Flutter projects.</p>
+</div>
+    <div class="note" data-index="13">
+  <h3 class="note__title">Generative Constructors</h3>
+  <p>The positional constructor requires three arguments in order. The first named form requires all three names but allows them in any order. The defaulted named form allows any of the three arguments to be omitted.</p>
+<p>An initializing formal such as <code>this.red</code> replaces a separate assignment from a parameter to the field. The two declarations in the second block show alternative forms for the same class and are not meant to appear together.</p>
+</div>
+    <div class="note" data-index="14">
+  <h3 class="note__title">Default Constructors</h3>
+  <p>The implicit constructor works because both fields have initializers. Removing those initializers would leave the non-nullable fields without values, so the class declaration would be rejected.</p>
+<p>Declaring any constructor removes the automatically supplied one. A class with only <code>Point(this.x, this.y)</code> cannot also be called as <code>Point()</code> unless a separate no-argument constructor is declared.</p>
+</div>
+    <div class="note" data-index="15">
+  <h3 class="note__title">Practice: Functions and Objects</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+    <div class="note" data-index="16">
+  <h3 class="note__title">Reference</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+  </div>
+</aside>
+
+<script>window.__ARC_NAMES__ = ["Functions", "Functions", "Functions", "Parameters", "Parameters", "Parameters", "Function Values", "Function Values", "Function Values", "Classes and Objects", "Classes and Objects", "Classes and Objects", "Classes and Objects", "Constructors", "Constructors", "Practice", "Study Reference"];</script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
