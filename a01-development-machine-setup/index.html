@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Development Machine Setup · Software Development for Mobile Devices</title>
+<meta name="description" content="Phase 1: Flutter, Android, and Firebase">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:theme');
+    var theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:mode');
+    var mode = (saved === 'workbook' || saved === 'answers') ? saved : 'slides';
+    document.documentElement.setAttribute('data-mode', mode);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:fontsize');
+    var size = (saved === 'small' || saved === 'large') ? saved : 'medium';
+    document.documentElement.setAttribute('data-font-size', size);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="icon-btn icon-btn--menu" id="btn-sidebar-toggle" title="Contents" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+    <span class="topbar__crest"><img src="../assets/img/mun-logo.png" alt="Memorial University" class="topbar__logo"></span>
+    <a class="topbar__course" href="../index.html">Software Development for Mobile Devices</a>
+    <span class="topbar__sep">/</span>
+    <span class="topbar__title">Setup: Development Machine Setup</span>
+  </div>
+  <div class="topbar__right">
+    <span class="topbar__arc" id="arc"></span>
+    <span class="topbar__counter" id="counter"></span>
+    <div class="mode-switch" id="mode-switch">
+      <button class="mode-btn" data-mode-btn="slides" title="Slides -- teaching content only (S)">Slides</button>
+      <button class="mode-btn" data-mode-btn="workbook" title="Workbook -- + questions, blank answers (W)">Workbook</button>
+      <button class="mode-btn" data-mode-btn="answers" title="Workbook + Solutions (A)">Answers</button>
+    </div>
+    <div class="font-switch" id="font-switch">
+      <button class="font-btn" data-font-btn="small" title="Small text">S</button>
+      <button class="font-btn" data-font-btn="medium" title="Medium text">M</button>
+      <button class="font-btn" data-font-btn="large" title="Large text (default)">L</button>
+    </div>
+    <button class="theme-switch" id="btn-theme" title="Toggle light / dark (T / D)" aria-pressed="false">
+      <span class="theme-switch__track"><span class="theme-switch__thumb"></span></span>
+    </button>
+    <button class="icon-btn" id="btn-notes" title="Toggle AI Explanation (N)">AI Explanation</button>
+    <button class="icon-btn" id="btn-present" title="Present, full screen (F)">Present</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar__arc">Getting Ready</div>
+    <button class="sidebar__item" data-index="0" title="Phase 1 Tools"><span class="sidebar__bullet">1</span><span class="sidebar__label">Phase 1 Tools</span></button>
+    <button class="sidebar__item" data-index="1" title="Requirements and Accounts"><span class="sidebar__bullet">2</span><span class="sidebar__label">Requirements and Accounts</span></button>
+    <button class="sidebar__item" data-index="2" title="Course Emulator"><span class="sidebar__bullet">3</span><span class="sidebar__label">Course Emulator</span></button>
+    <div class="sidebar__arc">Windows</div>
+    <button class="sidebar__item" data-index="3" title="Windows Basic Tools"><span class="sidebar__bullet">4</span><span class="sidebar__label">Windows Basic Tools</span></button>
+    <button class="sidebar__item" data-index="4" title="Windows Flutter and Virtualization"><span class="sidebar__bullet">5</span><span class="sidebar__label">Windows Flutter and Virtualization</span></button>
+    <button class="sidebar__item" data-index="5" title="Windows Android Tools"><span class="sidebar__bullet">6</span><span class="sidebar__label">Windows Android Tools</span></button>
+    <button class="sidebar__item" data-index="6" title="Windows Firebase and Test App"><span class="sidebar__bullet">7</span><span class="sidebar__label">Windows Firebase and Test App</span></button>
+    <button class="sidebar__item" data-index="7" title="Windows Verification"><span class="sidebar__bullet">8</span><span class="sidebar__label">Windows Verification</span></button>
+    <div class="sidebar__arc">macOS</div>
+    <button class="sidebar__item" data-index="8" title="macOS Basic Tools and Flutter"><span class="sidebar__bullet">9</span><span class="sidebar__label">macOS Basic Tools and Flutter</span></button>
+    <button class="sidebar__item" data-index="9" title="macOS Android Tools"><span class="sidebar__bullet">10</span><span class="sidebar__label">macOS Android Tools</span></button>
+    <button class="sidebar__item" data-index="10" title="macOS Emulator"><span class="sidebar__bullet">11</span><span class="sidebar__label">macOS Emulator</span></button>
+    <button class="sidebar__item" data-index="11" title="macOS Firebase and Test App"><span class="sidebar__bullet">12</span><span class="sidebar__label">macOS Firebase and Test App</span></button>
+    <button class="sidebar__item" data-index="12" title="macOS Verification"><span class="sidebar__bullet">13</span><span class="sidebar__label">macOS Verification</span></button>
+    <div class="sidebar__arc">Linux</div>
+    <button class="sidebar__item" data-index="13" title="Linux Basic Tools and KVM"><span class="sidebar__bullet">14</span><span class="sidebar__label">Linux Basic Tools and KVM</span></button>
+    <button class="sidebar__item" data-index="14" title="Linux Flutter and Android Tools"><span class="sidebar__bullet">15</span><span class="sidebar__label">Linux Flutter and Android Tools</span></button>
+    <button class="sidebar__item" data-index="15" title="Linux Emulator"><span class="sidebar__bullet">16</span><span class="sidebar__label">Linux Emulator</span></button>
+    <button class="sidebar__item" data-index="16" title="Linux Firebase and Test App"><span class="sidebar__bullet">17</span><span class="sidebar__label">Linux Firebase and Test App</span></button>
+    <button class="sidebar__item" data-index="17" title="Linux Verification"><span class="sidebar__bullet">18</span><span class="sidebar__label">Linux Verification</span></button>
+    <div class="sidebar__arc">Submission</div>
+    <button class="sidebar__item" data-index="18" title="Verification and Submission"><span class="sidebar__bullet">19</span><span class="sidebar__label">Verification and Submission</span></button>
+    <div class="sidebar__arc">Command Reference</div>
+    <button class="sidebar__item" data-index="19" title="Verification Logs"><span class="sidebar__bullet">20</span><span class="sidebar__label">Verification Logs</span></button>
+  </nav>
+  <div class="sidebar-scrim" id="sidebar-scrim"></div>
+  <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0"
+       title="Drag to resize, double-click to collapse"></div>
+
+  <main class="content">
+    <div class="steps" id="steps">
+      <section class="step" data-index="0">
+  <h2 class="step__title">Phase 1 Tools</h2>
+  <div class="step__body">
+    <div class="docblock docblock--outcomes">
+      <div class="docblock__label">Learning outcomes</div>
+      <div class="docblock__body"><p>When setup is complete, you should be able to create, analyze, test, run, and build a Flutter application on the course emulator.</p></div>
+    </div><p>Phase 1 prepares your computer for the course. Install:</p>
+<ul><li>Git and GitHub CLI;</li><li>Flutter and Dart;</li><li>Android Studio and the Android SDK;</li><li>a Pixel 9a Android emulator;</li><li>Firebase CLI; and</li><li>FlutterFire CLI.</li></ul>
+<p>Do not install Codex or agent skills yet. Those tools belong to Phase 2.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="1">
+  <h2 class="step__title">Requirements and Accounts</h2>
+  <div class="step__body">
+    <div class="table-wrap"><table><thead><tr><th>System</th><th>Supported computer</th></tr></thead><tbody><tr><td>Windows</td><td>64-bit Intel or AMD, Windows 10 or 11</td></tr><tr><td>macOS</td><td>Apple silicon or Intel Mac</td></tr><tr><td>Linux</td><td>64-bit Intel or AMD, Ubuntu or Debian</td></tr></tbody></table></div>
+<p>For every system:</p>
+<ul><li>8 GB memory minimum, with 16 GB recommended;</li><li>at least 35 GB free storage;</li><li>a Google account; and</li><li>a GitHub account.</li></ul>
+<p>Windows on ARM and Linux on ARM are not supported by Android Studio for this setup.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="2">
+  <h2 class="step__title">Course Emulator</h2>
+  <div class="step__body">
+    <p>Create one Android Virtual Device with this configuration:</p>
+<div class="table-wrap"><table><thead><tr><th>Setting</th><th>Required value</th></tr></thead><tbody><tr><td>Name</td><td><code>Pixel_9a_API_37</code></td></tr><tr><td>Device</td><td>Pixel 9a</td></tr><tr><td>Android version</td><td>Android 17</td></tr><tr><td>API level</td><td>37</td></tr><tr><td>Image</td><td>Google Play</td></tr></tbody></table></div>
+<p>Use ARM64 on an Apple silicon Mac. Use x86_64 on Windows, Linux, and an Intel Mac.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="3">
+  <h2 class="step__title">Windows Basic Tools</h2>
+  <div class="step__body">
+    <p>Download and install:</p>
+<ul><li><a href="https://git-scm.com/download/win" target="_blank" rel="noopener">Git</a></li><li><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></li><li><a href="https://nodejs.org/en/download" target="_blank" rel="noopener">Current Node.js LTS</a></li><li><a href="https://adoptium.net/" target="_blank" rel="noopener">Eclipse Temurin Java 21</a></li></ul>
+<p>During Java installation, set <code>JAVA_HOME</code> and add Java to <code>Path</code>. Reopen PowerShell, then run:</p>
+<pre class="code-block" data-lang="powershell"><code>git --version
+gh --version
+node --version
+npm --version
+java --version</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="4">
+  <h2 class="step__title">Windows Flutter and Virtualization</h2>
+  <div class="step__body">
+    <p>Download the current stable Flutter SDK from <a href="https://docs.flutter.dev/install" target="_blank" rel="noopener">Flutter installation</a>. Extract it to:</p>
+<pre class="code-block" data-lang="text"><code>C:\src\flutter</code></pre>
+<p>Add these folders to your user <code>Path</code>:</p>
+<pre class="code-block" data-lang="text"><code>C:\src\flutter\bin
+%LOCALAPPDATA%\Pub\Cache\bin</code></pre>
+<p>Do not put Flutter in Program Files or OneDrive.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="5">
+  <h2 class="step__title">Windows Android Tools</h2>
+  <div class="step__body">
+    <p>Install the current stable <a href="https://developer.android.com/studio" target="_blank" rel="noopener">Android Studio</a> and finish its setup wizard.</p>
+<p>Open <code>File -&gt; Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>. Install:</p>
+<ul><li>Android 17, API 37;</li><li>Android 16, API 36;</li><li>Android SDK Build-Tools and Platform-Tools;</li><li>Android SDK Command-line Tools (latest);</li><li>Android Emulator;</li><li>CMake; and</li><li>NDK (Side by side).</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="6">
+  <h2 class="step__title">Windows Firebase and Test App</h2>
+  <div class="step__body">
+    <p>Install the Firebase tools and sign in:</p>
+<pre class="code-block" data-lang="powershell"><code>npm install --global firebase-tools
+dart pub global activate flutterfire_cli
+firebase --version
+flutterfire --version
+firebase login
+firebase projects:list</code></pre>
+<p>Create the test application:</p>
+<pre class="code-block" data-lang="powershell"><code>New-Item -ItemType Directory -Force C:\dev\course
+Set-Location C:\dev\course
+flutter create --org com.yourname hello_flutter
+Set-Location hello_flutter
+flutter pub get
+flutter analyze
+flutter test</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="7">
+  <h2 class="step__title">Windows Verification</h2>
+  <div class="step__body">
+    <p>Keep the emulator running and open PowerShell in:</p>
+<pre class="code-block" data-lang="text"><code>C:\dev\course\hello_flutter</code></pre>
+<p>Run the Windows verification block on the reference page. It creates:</p>
+<pre class="code-block" data-lang="text"><code>setup_logs\phase1_windows_setup.txt</code></pre>
+<p>Open it with <code>notepad $Log</code> and check it before submitting it to Brightspace.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="8">
+  <h2 class="step__title">macOS Basic Tools and Flutter</h2>
+  <div class="step__body">
+    <p>Install <a href="https://brew.sh/" target="_blank" rel="noopener">Homebrew</a> if <code>brew --version</code> does not work. Then run:</p>
+<pre class="code-block" data-lang="bash"><code>brew update
+brew install git gh node
+brew install --cask temurin@21</code></pre>
+<p>Set your Git identity and sign in:</p>
+<pre class="code-block" data-lang="bash"><code>git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;your.email@example.com&quot;
+gh auth login --web
+gh auth status</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="9">
+  <h2 class="step__title">macOS Android Tools</h2>
+  <div class="step__body">
+    <p>Download the matching Apple silicon or Intel version of <a href="https://developer.android.com/studio" target="_blank" rel="noopener">Android Studio</a>. Move it to Applications and finish its setup wizard.</p>
+<p>Open <code>Android Studio -&gt; Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>. Install:</p>
+<ul><li>Android 17, API 37;</li><li>Android 16, API 36;</li><li>Android SDK Build-Tools and Platform-Tools;</li><li>Android SDK Command-line Tools (latest);</li><li>Android Emulator;</li><li>CMake; and</li><li>NDK (Side by side).</li></ul>
+  </div>
+  
+</section>
+    <section class="step" data-index="10">
+  <h2 class="step__title">macOS Emulator</h2>
+  <div class="step__body">
+    <p>Open <code>Tools -&gt; Device Manager</code> and create the course emulator.</p>
+<div class="table-wrap"><table><thead><tr><th>Mac</th><th>System image</th></tr></thead><tbody><tr><td>Apple silicon</td><td>Android 17, API 37, Google Play, ARM64</td></tr><tr><td>Intel</td><td>Android 17, API 37, Google Play, x86_64</td></tr></tbody></table></div>
+<p>Set the AVD name to <code>Pixel_9a_API_37</code>, finish the setup, and wait for the Android home screen.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="11">
+  <h2 class="step__title">macOS Firebase and Test App</h2>
+  <div class="step__body">
+    <p>Install the Firebase tools and create the test application:</p>
+<pre class="code-block" data-lang="bash"><code>npm install --global firebase-tools
+dart pub global activate flutterfire_cli
+firebase --version
+flutterfire --version
+firebase login
+firebase projects:list
+mkdir -p &quot;$HOME/development/course&quot;
+cd &quot;$HOME/development/course&quot;
+flutter create --org com.yourname hello_flutter
+cd hello_flutter
+flutter pub get
+flutter analyze
+flutter test</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="12">
+  <h2 class="step__title">macOS Verification</h2>
+  <div class="step__body">
+    <p>Keep the emulator running and open Terminal in the <code>hello_flutter</code> folder.</p>
+<p>Run the macOS verification block on the reference page. It creates:</p>
+<pre class="code-block" data-lang="text"><code>setup_logs/phase1_macos_setup.txt</code></pre>
+<p>Open it with <code>open "$LOG"</code> and check it before submitting it to Brightspace.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="13">
+  <h2 class="step__title">Linux Basic Tools and KVM</h2>
+  <div class="step__body">
+    <p>These commands are for Ubuntu or Debian on a 64-bit Intel or AMD computer:</p>
+<pre class="code-block" data-lang="bash"><code>sudo apt-get update
+sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+sudo apt-get install -y openjdk-21-jdk qemu-kvm cpu-checker
+sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386</code></pre>
+<p>Install <a href="https://github.com/cli/cli/blob/trunk/docs/install_linux.md" target="_blank" rel="noopener">GitHub CLI</a> and the <a href="https://nodejs.org/en/download" target="_blank" rel="noopener">current Node.js LTS</a>. Use one Node installation method only.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="14">
+  <h2 class="step__title">Linux Flutter and Android Tools</h2>
+  <div class="step__body">
+    <p>Download stable Flutter from <a href="https://docs.flutter.dev/install" target="_blank" rel="noopener">Flutter installation</a> and extract it to <code>/home/your-name/development/flutter</code>.</p>
+<p>Add this line to <code>~/.bashrc</code>, or to the profile used by your shell:</p>
+<pre class="code-block" data-lang="bash"><code>export PATH=&quot;$HOME/development/flutter/bin:$HOME/.pub-cache/bin:$PATH&quot;</code></pre>
+<p>Reopen Terminal, then run <code>which flutter</code>, <code>flutter channel stable</code>, <code>flutter upgrade</code>, <code>flutter --version</code>, and <code>dart --version</code>.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="15">
+  <h2 class="step__title">Linux Emulator</h2>
+  <div class="step__body">
+    <p>Open <code>Tools -&gt; Device Manager</code> and choose Pixel 9a with:</p>
+<ul><li>Android 17;</li><li>API 37;</li><li>Google Play; and</li><li>x86_64.</li></ul>
+<p>Set the AVD name to <code>Pixel_9a_API_37</code>, finish the setup, and wait for the Android home screen.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="16">
+  <h2 class="step__title">Linux Firebase and Test App</h2>
+  <div class="step__body">
+    <p>Install the Firebase tools and create the test application:</p>
+<pre class="code-block" data-lang="bash"><code>npm install --global firebase-tools
+dart pub global activate flutterfire_cli
+firebase --version
+flutterfire --version
+firebase login
+firebase projects:list
+mkdir -p &quot;$HOME/development/course&quot;
+cd &quot;$HOME/development/course&quot;
+flutter create --org com.yourname hello_flutter
+cd hello_flutter
+flutter pub get
+flutter analyze
+flutter test</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="17">
+  <h2 class="step__title">Linux Verification</h2>
+  <div class="step__body">
+    <p>Keep the emulator running and open Terminal in the <code>hello_flutter</code> folder.</p>
+<p>Run the Linux verification block on the reference page. It creates:</p>
+<pre class="code-block" data-lang="text"><code>setup_logs/phase1_linux_setup.txt</code></pre>
+<p>Open it with your normal text editor, such as <code>xdg-open "$LOG"</code>, and check it before submitting it to Brightspace.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="18">
+  <h2 class="step__title">Verification and Submission</h2>
+  <div class="step__body">
+    <p>Before submitting, confirm that the log shows:</p>
+<ul><li>Android 17 and API 37;</li><li><code>Pixel_9a_API_37</code>;</li><li>no Android toolchain error;</li><li>successful <code>flutter analyze</code> and <code>flutter test</code>;</li><li>a successful debug APK build; and</li><li>signed-in GitHub and Firebase accounts.</li></ul>
+<p>Submit only your operating system's Phase 1 setup log to Brightspace.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="19">
+  <h2 class="step__title">Verification Logs</h2>
+  <div class="step__body">
+    <div class="docblock docblock--reference">
+      <div class="docblock__label">Reference</div>
+      <div class="docblock__body"><p>Run only the block for your operating system. Keep <code>Pixel_9a_API_37</code> running and execute the block from the <code>hello_flutter</code> project folder.</p>
+<h3>Windows</h3>
+<pre class="code-block" data-lang="powershell"><code>New-Item -ItemType Directory -Force setup_logs | Out-Null
+$Log = Join-Path (Get-Location) &quot;setup_logs\phase1_windows_setup.txt&quot;
+Start-Transcript -Path $Log -Force
+Write-Output &quot;PHASE 1 WINDOWS SETUP CHECK&quot;
+Get-Date
+Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsTotalPhysicalMemory
+git --version
+gh auth status
+node --version
+npm --version
+java --version
+flutter --version
+dart --version
+flutter doctor -v
+flutter emulators
+flutter devices
+adb -e emu avd name
+adb -e shell getprop ro.build.version.release
+adb -e shell getprop ro.build.version.sdk
+firebase --version
+firebase projects:list
+flutterfire --version
+flutter analyze
+flutter test
+flutter build apk --debug
+Stop-Transcript</code></pre>
+<p>Open the log with <code>notepad $Log</code>.</p>
+<h3>macOS</h3>
+<pre class="code-block" data-lang="bash"><code>mkdir -p setup_logs
+LOG=&quot;setup_logs/phase1_macos_setup.txt&quot;
+{
+  echo &quot;PHASE 1 MACOS SETUP CHECK&quot;
+  date
+  sw_vers
+  uname -m
+  git --version
+  gh auth status
+  node --version
+  npm --version
+  java --version
+  flutter --version
+  dart --version
+  flutter doctor -v
+  flutter emulators
+  flutter devices
+  adb -e emu avd name
+  adb -e shell getprop ro.build.version.release
+  adb -e shell getprop ro.build.version.sdk
+  firebase --version
+  firebase projects:list
+  flutterfire --version
+  flutter analyze
+  flutter test
+  flutter build apk --debug
+} 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
+<p>Open the log with <code>open "$LOG"</code>.</p>
+<h3>Linux</h3>
+<pre class="code-block" data-lang="bash"><code>mkdir -p setup_logs
+LOG=&quot;setup_logs/phase1_linux_setup.txt&quot;
+{
+  echo &quot;PHASE 1 LINUX SETUP CHECK&quot;
+  date
+  uname -a
+  grep MemTotal /proc/meminfo
+  git --version
+  gh auth status
+  node --version
+  npm --version
+  java --version
+  flutter --version
+  dart --version
+  flutter doctor -v
+  flutter emulators
+  flutter devices
+  adb -e emu avd name
+  adb -e shell getprop ro.build.version.release
+  adb -e shell getprop ro.build.version.sdk
+  firebase --version
+  firebase projects:list
+  flutterfire --version
+  flutter analyze
+  flutter test
+  flutter build apk --debug
+} 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
+<p>Open the log with your normal text editor, for example <code>xdg-open "$LOG"</code>.</p>
+<h3>Help</h3>
+<ul><li><a href="https://docs.flutter.dev/platform-integration/android/setup" target="_blank" rel="noopener">Flutter Android setup</a></li><li><a href="https://developer.android.com/studio/run/managing-avds" target="_blank" rel="noopener">Android virtual devices</a></li><li><a href="https://firebase.google.com/docs/cli" target="_blank" rel="noopener">Firebase CLI</a></li><li><a href="https://firebase.google.com/docs/flutter/setup" target="_blank" rel="noopener">FlutterFire</a></li></ul></div>
+    </div>
+  </div>
+  
+</section>
+    </div>
+
+    <div class="stepnav">
+      <button class="btn btn--ghost" id="btn-back">Back</button>
+      <button class="btn btn--primary" id="btn-next">Next</button>
+    </div>
+  </main>
+</div>
+
+<aside class="notes-panel" id="notes-panel">
+  <div class="resizer resizer--notes" id="notes-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0" title="Drag to resize"></div>
+  <div class="notes-panel__header">
+    <span>AI Explanation</span>
+    <button class="icon-btn icon-btn--close" id="btn-notes-close" title="Close (N)">Close</button>
+  </div>
+  <div class="notes-panel__body" id="notes-body">
+    <div class="note" data-index="0">
+  <h3 class="note__title">Phase 1 Tools</h3>
+  <p>Follow only the section for your operating system. Use PowerShell on Windows and a normal terminal on macOS or Linux.</p>
+<p>Several downloads are large. Start early enough to resolve installation, account, or virtualization problems before the submission deadline.</p>
+<p>The three operating-system sections lead to the same result. Their commands differ because installation paths, package managers, and virtualization support differ.</p>
+</div>
+    <div class="note" data-index="1">
+  <h3 class="note__title">Requirements and Accounts</h3>
+  <p>Linux setup also requires permission to use <code>sudo</code>. Windows students should use PowerShell for every command in this guide.</p>
+<p>The Android emulator uses a large part of the recommended memory. A computer with 8 GB can meet the stated minimum, but 16 GB should provide a smoother experience while Android Studio and the emulator run together.</p>
+<p>Use course accounts that you can access throughout the term. The final verification checks both GitHub and Firebase sign-in.</p>
+</div>
+    <div class="note" data-index="2">
+  <h3 class="note__title">Course Emulator</h3>
+  <p>Do not choose a Beta, Preview, Canary, or QPR Beta system image. Keep graphics acceleration on Hardware or Automatic.</p>
+<p>If Pixel 9a is missing from Device Manager, update Android Studio and Android Emulator. If it is still missing, create a hardware profile named <code>Pixel 9a Course</code> with a 6.3-inch screen, 1080 x 2424 resolution, 4096 MB RAM, and 420 dpi density.</p>
+<p>The virtual-device name matters because the verification log checks it. Wait for the Android home screen before running the Flutter application.</p>
+</div>
+    <div class="note" data-index="3">
+  <h3 class="note__title">Windows Basic Tools</h3>
+  <p>Configure Git with your own name and email, then sign in to GitHub:</p>
+<pre class="code-block" data-lang="powershell"><code>git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;your.email@example.com&quot;
+gh auth login --web
+gh auth status</code></pre>
+<p>Finish the GitHub sign-in page in your browser. The final <code>gh auth status</code> command should identify the account that you intend to use for the course.</p>
+</div>
+    <div class="note" data-index="4">
+  <h3 class="note__title">Windows Flutter and Virtualization</h3>
+  <p>Reopen PowerShell and check Flutter:</p>
+<pre class="code-block" data-lang="powershell"><code>where.exe flutter
+flutter channel stable
+flutter upgrade
+flutter --version
+dart --version</code></pre>
+<p>Open <code>Task Manager -&gt; Performance -&gt; CPU</code> and confirm that it reports <code>Virtualization: Enabled</code>. If it is disabled, enable Intel VT-x, AMD-V, or SVM in BIOS or UEFI.</p>
+<p>Enable Windows Hypervisor Platform in Windows Features, then restart Windows.</p>
+</div>
+    <div class="note" data-index="5">
+  <h3 class="note__title">Windows Android Tools</h3>
+  <p>Click Apply and wait for every download to finish. Then accept the Android licenses:</p>
+<pre class="code-block" data-lang="powershell"><code>flutter doctor --android-licenses
+flutter doctor -v</code></pre>
+<p>Read each license and type <code>y</code> when you agree. The Android toolchain and Android Studio sections should not show an error. Warnings for other platforms can be ignored.</p>
+<p>In <code>Tools -&gt; Device Manager</code>, create the course emulator using the common configuration at the beginning of this guide. Windows uses the x86_64 Google Play image.</p>
+</div>
+    <div class="note" data-index="6">
+  <h3 class="note__title">Windows Firebase and Test App</h3>
+  <p>Use the Google account for this course. A Firebase-enabled Flutter project will later use:</p>
+<pre class="code-block" data-lang="powershell"><code>flutterfire configure --platforms=android
+firebase init emulators
+firebase emulators:start</code></pre>
+<p>Start <code>Pixel_9a_API_37</code>, list the available devices, and run the test app:</p>
+<pre class="code-block" data-lang="powershell"><code>flutter devices
+flutter run -d &lt;emulator-device-id&gt;</code></pre>
+<p>Replace <code>&lt;emulator-device-id&gt;</code> with the ID printed by <code>flutter devices</code>. It often looks like <code>emulator-5554</code>. Press <code>q</code> to stop the app, then run <code>flutter build apk --debug</code>.</p>
+</div>
+    <div class="note" data-index="7">
+  <h3 class="note__title">Windows Verification</h3>
+  <p>The log should show Android 17, API 37, and the AVD name <code>Pixel_9a_API_37</code>. Flutter Doctor should report no Android toolchain error.</p>
+<p>It should also show successful Flutter analysis, tests, and debug APK build, along with signed-in GitHub and Firebase accounts.</p>
+<p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files.</p>
+</div>
+    <div class="note" data-index="8">
+  <h3 class="note__title">macOS Basic Tools and Flutter</h3>
+  <p>Check the installed tools:</p>
+<pre class="code-block" data-lang="bash"><code>git --version
+gh --version
+node --version
+npm --version
+java --version</code></pre>
+<p>Download stable Flutter from <a href="https://docs.flutter.dev/install" target="_blank" rel="noopener">Flutter installation</a>. Choose the Apple silicon download for an M-series Mac and the Intel download for an Intel Mac. Extract it to <code>/Users/your-name/development/flutter</code>.</p>
+<p>Add this line to <code>~/.zprofile</code>:</p>
+<pre class="code-block" data-lang="bash"><code>export PATH=&quot;$HOME/development/flutter/bin:$HOME/.pub-cache/bin:$PATH&quot;</code></pre>
+<p>Reopen Terminal, then run <code>which flutter</code>, <code>flutter channel stable</code>, <code>flutter upgrade</code>, <code>flutter --version</code>, and <code>dart --version</code>.</p>
+</div>
+    <div class="note" data-index="9">
+  <h3 class="note__title">macOS Android Tools</h3>
+  <p>Click Apply and wait for every download to finish. Then run:</p>
+<pre class="code-block" data-lang="bash"><code>flutter doctor --android-licenses
+flutter doctor -v</code></pre>
+<p>Read each license and type <code>y</code> when you agree. The Android toolchain and Android Studio sections should not show an error. Warnings for other platforms can be ignored.</p>
+</div>
+    <div class="note" data-index="10">
+  <h3 class="note__title">macOS Emulator</h3>
+  <p>If the Pixel 9a device is missing, use the fallback hardware profile described at the beginning of this guide.</p>
+<p>Do not select a Beta, Preview, Canary, or QPR Beta image. Keep graphics acceleration on Hardware or Automatic.</p>
+<p>The system-image architecture must match the Mac. An Intel image is not the correct choice for an Apple silicon Mac.</p>
+</div>
+    <div class="note" data-index="11">
+  <h3 class="note__title">macOS Firebase and Test App</h3>
+  <p>Start <code>Pixel_9a_API_37</code>, then run:</p>
+<pre class="code-block" data-lang="bash"><code>flutter devices
+flutter run -d &lt;emulator-device-id&gt;</code></pre>
+<p>Replace the placeholder with the ID printed by <code>flutter devices</code>. Press <code>q</code> to stop the app, then run <code>flutter build apk --debug</code>.</p>
+<p>A Firebase-enabled Flutter project will later use <code>flutterfire configure --platforms=android</code>. A project using local Firebase emulators will use <code>firebase init emulators</code> followed by <code>firebase emulators:start</code>.</p>
+</div>
+    <div class="note" data-index="12">
+  <h3 class="note__title">macOS Verification</h3>
+  <p>The log should show Android 17, API 37, and the AVD name <code>Pixel_9a_API_37</code>. Flutter Doctor should report no Android toolchain error.</p>
+<p>It should also show successful Flutter analysis, tests, and debug APK build, along with signed-in GitHub and Firebase accounts.</p>
+<p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files.</p>
+</div>
+    <div class="note" data-index="13">
+  <h3 class="note__title">Linux Basic Tools and KVM</h3>
+  <p>Reopen Terminal, check the tools, configure Git with your own name and email, and sign in:</p>
+<pre class="code-block" data-lang="bash"><code>git --version
+gh --version
+node --version
+npm --version
+java --version
+git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;your.email@example.com&quot;
+gh auth login --web
+gh auth status</code></pre>
+<p>Check virtualization:</p>
+<pre class="code-block" data-lang="bash"><code>egrep -c &#x27;(vmx|svm)&#x27; /proc/cpuinfo
+kvm-ok
+sudo usermod -aG kvm &quot;$USER&quot;</code></pre>
+<p>The first command should print a number greater than zero, and <code>kvm-ok</code> should report that acceleration can be used. Enable VT-x, AMD-V, or SVM in BIOS or UEFI if needed. Log out and back in after changing the KVM group. Do not run Android Studio or the emulator as root.</p>
+</div>
+    <div class="note" data-index="14">
+  <h3 class="note__title">Linux Flutter and Android Tools</h3>
+  <p>Download <a href="https://developer.android.com/studio" target="_blank" rel="noopener">Android Studio</a>, follow Google's Linux installation instructions, and finish its setup wizard.</p>
+<p>Under <code>Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>, install Android 17 API 37, Android 16 API 36, Build-Tools, Command-line Tools, Emulator, Platform-Tools, CMake, and NDK.</p>
+<p>Click Apply, then run:</p>
+<pre class="code-block" data-lang="bash"><code>flutter doctor --android-licenses
+flutter doctor -v</code></pre>
+<p>Read each license and type <code>y</code> when you agree. The Android toolchain and Android Studio sections should not show an error. Warnings for other platforms can be ignored.</p>
+</div>
+    <div class="note" data-index="15">
+  <h3 class="note__title">Linux Emulator</h3>
+  <p>If the Pixel 9a device is missing, use the fallback hardware profile described at the beginning of this guide.</p>
+<p>Do not select a Beta, Preview, Canary, or QPR Beta image. Keep graphics acceleration on Hardware or Automatic.</p>
+<p>If the emulator does not start, recheck <code>kvm-ok</code> and your KVM group membership before changing the emulator configuration.</p>
+</div>
+    <div class="note" data-index="16">
+  <h3 class="note__title">Linux Firebase and Test App</h3>
+  <p>Start <code>Pixel_9a_API_37</code>, then run:</p>
+<pre class="code-block" data-lang="bash"><code>flutter devices
+flutter run -d &lt;emulator-device-id&gt;</code></pre>
+<p>Replace the placeholder with the ID printed by <code>flutter devices</code>. Press <code>q</code> to stop the app, then run <code>flutter build apk --debug</code>.</p>
+<p>A Firebase-enabled Flutter project will later use <code>flutterfire configure --platforms=android</code>. A project using local Firebase emulators will use <code>firebase init emulators</code> followed by <code>firebase emulators:start</code>.</p>
+</div>
+    <div class="note" data-index="17">
+  <h3 class="note__title">Linux Verification</h3>
+  <p>The log should show Android 17, API 37, and the AVD name <code>Pixel_9a_API_37</code>. Flutter Doctor should report no Android toolchain error.</p>
+<p>It should also show successful Flutter analysis, tests, and debug APK build, along with signed-in GitHub and Firebase accounts.</p>
+<p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files.</p>
+</div>
+    <div class="note" data-index="18">
+  <h3 class="note__title">Verification and Submission</h3>
+  <p>The three log filenames are:</p>
+<ul><li>Windows: <code>phase1_windows_setup.txt</code></li><li>macOS: <code>phase1_macos_setup.txt</code></li><li>Linux: <code>phase1_linux_setup.txt</code></li></ul>
+<p>Open the file and read it before submitting. Command logs can contain more information than expected. Remove secrets rather than submitting passwords, tokens, recovery codes, private keys, or service-account files.</p>
+<p>If a check fails, return to the matching setup slide and correct the installation before creating the final log.</p>
+</div>
+    <div class="note" data-index="19">
+  <h3 class="note__title">Verification Logs</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+  </div>
+</aside>
+
+<script>window.__ARC_NAMES__ = ["Getting Ready", "Getting Ready", "Getting Ready", "Windows", "Windows", "Windows", "Windows", "Windows", "macOS", "macOS", "macOS", "macOS", "macOS", "Linux", "Linux", "Linux", "Linux", "Linux", "Submission", "Command Reference"];</script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
