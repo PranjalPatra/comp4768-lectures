@@ -85,11 +85,12 @@
     <button class="sidebar__item" data-index="12" title="Getters and Setters"><span class="sidebar__bullet">13</span><span class="sidebar__label">Getters and Setters</span></button>
     <div class="sidebar__arc">Constructors</div>
     <button class="sidebar__item" data-index="13" title="Generative Constructors"><span class="sidebar__bullet">14</span><span class="sidebar__label">Generative Constructors</span></button>
-    <button class="sidebar__item" data-index="14" title="Default Constructors"><span class="sidebar__bullet">15</span><span class="sidebar__label">Default Constructors</span></button>
+    <button class="sidebar__item" data-index="14" title="Named Constructors"><span class="sidebar__bullet">15</span><span class="sidebar__label">Named Constructors</span></button>
+    <button class="sidebar__item" data-index="15" title="Default Constructors"><span class="sidebar__bullet">16</span><span class="sidebar__label">Default Constructors</span></button>
     <div class="sidebar__arc">Practice</div>
-    <button class="sidebar__item" data-practice data-index="15" title="Practice: Functions and Objects"><span class="sidebar__bullet">16</span><span class="sidebar__label">Practice: Functions and Objects</span></button>
+    <button class="sidebar__item" data-practice data-index="16" title="Practice: Functions and Objects"><span class="sidebar__bullet">17</span><span class="sidebar__label">Practice: Functions and Objects</span></button>
     <div class="sidebar__arc">Study Reference</div>
-    <button class="sidebar__item" data-index="16" title="Reference"><span class="sidebar__bullet">17</span><span class="sidebar__label">Reference</span></button>
+    <button class="sidebar__item" data-index="17" title="Reference"><span class="sidebar__bullet">18</span><span class="sidebar__label">Reference</span></button>
   </nav>
   <div class="sidebar-scrim" id="sidebar-scrim"></div>
   <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
@@ -425,6 +426,30 @@ null</code></pre>
   </div>
 </section>
     <section class="step" data-index="14">
+  <h2 class="step__title">Named Constructors</h2>
+  <div class="step__body">
+    <p>A named constructor gives a class another clearly named way to create an object.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">class</span> Point {
+  <span class="tok-keyword">final</span> <span class="tok-type">double</span> x;
+  <span class="tok-keyword">final</span> <span class="tok-type">double</span> y;
+
+  <span class="tok-function">Point</span>(<span class="tok-keyword">this</span>.x, <span class="tok-keyword">this</span>.y);
+  Point.<span class="tok-function">origin</span>() : x = <span class="tok-number">0</span>, y = <span class="tok-number">0</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> position = <span class="tok-function">Point</span>(<span class="tok-number">3</span>, <span class="tok-number">4</span>);
+  <span class="tok-keyword">var</span> origin = Point.<span class="tok-function">origin</span>();
+
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;${position.x}, ${position.y}&#x27;</span>);
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;${origin.x}, ${origin.y}&#x27;</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>3.0, 4.0
+0.0, 0.0</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="15">
   <h2 class="step__title">Default Constructors</h2>
   <div class="step__body">
     <p>If a class declares no constructor, Dart supplies an unnamed constructor with no arguments.</p>
@@ -442,7 +467,7 @@ null</code></pre>
   </div>
   
 </section>
-    <section class="step" data-practice data-index="15">
+    <section class="step" data-practice data-index="16">
   <h2 class="step__title">Practice: Functions and Objects</h2>
   <div class="step__body">
     
@@ -464,7 +489,7 @@ null</code></pre>
     </div>
   </div>
 </section>
-    <section class="step" data-index="16">
+    <section class="step" data-index="17">
   <h2 class="step__title">Reference</h2>
   <div class="step__body">
     <div class="docblock docblock--reference">
@@ -497,7 +522,7 @@ null</code></pre>
 <span class="tok-type">int</span> <span class="tok-type">Function</span>(<span class="tok-type">int</span>) operation = arrow;</code></pre>
 <p>A function value can be stored in a variable or passed as an argument. A callback is a function supplied to another operation. A higher-order function receives or returns a function.</p>
 <h3>Constructor Forms</h3>
-<div class="table-wrap"><table><thead><tr><th>Form</th><th>Example</th><th>Use</th></tr></thead><tbody><tr><td>Generative</td><td><code>MyColor(this.red, this.green, this.blue)</code></td><td>Create and initialize a new object.</td></tr><tr><td>Defaulted positional</td><td><code>MyColor([this.red = 0, this.green = 0, this.blue = 0])</code></td><td>Let callers omit values from the end of the argument list.</td></tr><tr><td>Default</td><td><code>Point()</code> supplied automatically</td><td>Available only when the class declares no constructor.</td></tr></tbody></table></div></div>
+<div class="table-wrap"><table><thead><tr><th>Form</th><th>Example</th><th>Use</th></tr></thead><tbody><tr><td>Generative</td><td><code>MyColor(this.red, this.green, this.blue)</code></td><td>Create and initialize a new object.</td></tr><tr><td>Named</td><td><code>Point.origin()</code></td><td>Give an alternative construction path a clear name.</td></tr><tr><td>Defaulted positional</td><td><code>MyColor([this.red = 0, this.green = 0, this.blue = 0])</code></td><td>Let callers omit values from the end of the argument list.</td></tr><tr><td>Default</td><td><code>Point()</code> supplied automatically</td><td>Available only when the class declares no constructor.</td></tr></tbody></table></div></div>
     </div>
   </div>
   
@@ -594,22 +619,28 @@ null</code></pre>
 <p>An initializing formal such as <code>this.red</code> replaces a separate assignment from a parameter to the field. The two declarations in the second block show alternative forms for the same class and are not meant to appear together.</p>
 </div>
     <div class="note" data-index="14">
+  <h3 class="note__title">Named Constructors</h3>
+  <p>Both constructors create a <code>Point</code>. The unnamed constructor <code>Point(this.x, this.y)</code> receives coordinates from the caller. The named constructor <code>Point.origin()</code> communicates that both coordinates will be zero.</p>
+<p>The period between <code>Point</code> and <code>origin</code> is part of the constructor's name. The colon introduces field initialization that happens before the constructor body. Initializer lists are covered with the other constructor forms in L5.</p>
+<p>A subclass does not inherit a superclass's named constructors. If a subclass needs its own <code>origin</code> constructor, it must declare that constructor itself.</p>
+</div>
+    <div class="note" data-index="15">
   <h3 class="note__title">Default Constructors</h3>
   <p>The implicit constructor works because both fields have initializers. Removing those initializers would leave the non-nullable fields without values, so the class declaration would be rejected.</p>
 <p>Declaring any constructor removes the automatically supplied one. A class with only <code>Point(this.x, this.y)</code> cannot also be called as <code>Point()</code> unless a separate no-argument constructor is declared.</p>
 </div>
-    <div class="note" data-index="15">
+    <div class="note" data-index="16">
   <h3 class="note__title">Practice: Functions and Objects</h3>
   <p><em>No AI Explanation for this slide.</em></p>
 </div>
-    <div class="note" data-index="16">
+    <div class="note" data-index="17">
   <h3 class="note__title">Reference</h3>
   <p><em>No AI Explanation for this slide.</em></p>
 </div>
   </div>
 </aside>
 
-<script>window.__ARC_NAMES__ = ["Functions", "Functions", "Functions", "Parameters", "Parameters", "Parameters", "Function Values", "Function Values", "Function Values", "Classes and Objects", "Classes and Objects", "Classes and Objects", "Classes and Objects", "Constructors", "Constructors", "Practice", "Study Reference"];</script>
+<script>window.__ARC_NAMES__ = ["Functions", "Functions", "Functions", "Parameters", "Parameters", "Parameters", "Function Values", "Function Values", "Function Values", "Classes and Objects", "Classes and Objects", "Classes and Objects", "Classes and Objects", "Constructors", "Constructors", "Constructors", "Practice", "Study Reference"];</script>
 <script src="../assets/app.js"></script>
 </body>
 </html>
