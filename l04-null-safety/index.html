@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Null Safety · Software Development for Mobile Devices</title>
+<meta name="description" content="Values that may be absent">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:theme');
+    var theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:mode');
+    var mode = (saved === 'workbook' || saved === 'answers') ? saved : 'slides';
+    document.documentElement.setAttribute('data-mode', mode);
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('codelabs:fontsize');
+    var size = (saved === 'small' || saved === 'large') ? saved : 'medium';
+    document.documentElement.setAttribute('data-font-size', size);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="icon-btn icon-btn--menu" id="btn-sidebar-toggle" title="Contents" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+    <span class="topbar__crest"><img src="../assets/img/mun-logo.png" alt="Memorial University" class="topbar__logo"></span>
+    <a class="topbar__course" href="../index.html">Software Development for Mobile Devices</a>
+    <span class="topbar__sep">/</span>
+    <span class="topbar__title">L4: Null Safety</span>
+  </div>
+  <div class="topbar__right">
+    <span class="topbar__arc" id="arc"></span>
+    <span class="topbar__counter" id="counter"></span>
+    <div class="mode-switch" id="mode-switch">
+      <button class="mode-btn" data-mode-btn="slides" title="Slides -- teaching content only (S)">Slides</button>
+      <button class="mode-btn" data-mode-btn="workbook" title="Workbook -- + questions, blank answers (W)">Workbook</button>
+      <button class="mode-btn" data-mode-btn="answers" title="Workbook + Solutions (A)">Answers</button>
+    </div>
+    <div class="font-switch" id="font-switch">
+      <button class="font-btn" data-font-btn="small" title="Small text">S</button>
+      <button class="font-btn" data-font-btn="medium" title="Medium text">M</button>
+      <button class="font-btn" data-font-btn="large" title="Large text (default)">L</button>
+    </div>
+    <button class="theme-switch" id="btn-theme" title="Toggle light / dark (T / D)" aria-pressed="false">
+      <span class="theme-switch__track"><span class="theme-switch__thumb"></span></span>
+    </button>
+    <button class="icon-btn" id="btn-notes" title="Toggle AI Explanation (N)">AI Explanation</button>
+    <button class="icon-btn" id="btn-present" title="Present, full screen (F)">Present</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar__arc">Null Safety</div>
+    <button class="sidebar__item" data-index="0" title="The Problem with Null"><span class="sidebar__bullet">1</span><span class="sidebar__label">The Problem with Null</span></button>
+    <button class="sidebar__item" data-index="1" title="Sound Null Safety"><span class="sidebar__bullet">2</span><span class="sidebar__label">Sound Null Safety</span></button>
+    <button class="sidebar__item" data-index="2" title="Non-Nullable by Default"><span class="sidebar__bullet">3</span><span class="sidebar__label">Non-Nullable by Default</span></button>
+    <button class="sidebar__item" data-index="3" title="Nullable Types"><span class="sidebar__bullet">4</span><span class="sidebar__label">Nullable Types</span></button>
+    <div class="sidebar__arc">Working with Nullable Values</div>
+    <button class="sidebar__item" data-index="4" title="Checking for Null"><span class="sidebar__bullet">5</span><span class="sidebar__label">Checking for Null</span></button>
+    <button class="sidebar__item" data-index="5" title="The ?? Operator"><span class="sidebar__bullet">6</span><span class="sidebar__label">The ?? Operator</span></button>
+    <button class="sidebar__item" data-index="6" title="The ??= Operator"><span class="sidebar__bullet">7</span><span class="sidebar__label">The ??= Operator</span></button>
+    <button class="sidebar__item" data-index="7" title="Conditional Access"><span class="sidebar__bullet">8</span><span class="sidebar__label">Conditional Access</span></button>
+    <button class="sidebar__item" data-index="8" title="The ! Operator"><span class="sidebar__bullet">9</span><span class="sidebar__label">The ! Operator</span></button>
+    <div class="sidebar__arc">Nulls in Functions and Objects</div>
+    <button class="sidebar__item" data-index="9" title="Nullable Parameters"><span class="sidebar__bullet">10</span><span class="sidebar__label">Nullable Parameters</span></button>
+    <button class="sidebar__item" data-index="10" title="Nullable Return Values"><span class="sidebar__bullet">11</span><span class="sidebar__label">Nullable Return Values</span></button>
+    <button class="sidebar__item" data-index="11" title="Map Lookup Revisited"><span class="sidebar__bullet">12</span><span class="sidebar__label">Map Lookup Revisited</span></button>
+    <button class="sidebar__item" data-index="12" title="Late and Nullable Variables"><span class="sidebar__bullet">13</span><span class="sidebar__label">Late and Nullable Variables</span></button>
+    <div class="sidebar__arc">Practice</div>
+    <button class="sidebar__item" data-practice data-index="13" title="Practice: Null Safety"><span class="sidebar__bullet">14</span><span class="sidebar__label">Practice: Null Safety</span></button>
+    <div class="sidebar__arc">Study Reference</div>
+    <button class="sidebar__item" data-index="14" title="Null-Safety Operators"><span class="sidebar__bullet">15</span><span class="sidebar__label">Null-Safety Operators</span></button>
+  </nav>
+  <div class="sidebar-scrim" id="sidebar-scrim"></div>
+  <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0"
+       title="Drag to resize, double-click to collapse"></div>
+
+  <main class="content">
+    <div class="steps" id="steps">
+      <section class="step" data-index="0">
+  <h2 class="step__title">The Problem with Null</h2>
+  <div class="step__body">
+    <div class="docblock docblock--outcomes">
+      <div class="docblock__label">Learning outcomes</div>
+      <div class="docblock__body"><p>By the end of this lecture, you should be able to:</p>
+<ul><li>distinguish non-nullable and nullable types;</li><li>use null checks, <code>?.</code>, <code>??</code>, <code>??=</code>, and <code>!</code>;</li><li>declare nullable parameters and return types; and</li><li>choose between a nullable variable and <code>late</code>.</li></ul></div>
+    </div><p><code>null</code> means that a value is absent. Using an absent value as if it were an object can crash a program.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">bool</span> <span class="tok-function">isEmpty</span>(<span class="tok-type">String</span> text) =&gt; text.length == <span class="tok-number">0</span>;
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">isEmpty</span>(<span class="tok-keyword">null</span>); <span class="tok-comment">// Compile-time error</span>
+}</code></pre>
+<p>Current Dart rejects this call before the program runs.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="1">
+  <h2 class="step__title">Sound Null Safety</h2>
+  <div class="step__body">
+    <p>Dart has sound null safety:</p>
+<ul><li>a non-nullable variable cannot contain <code>null</code>;</li><li>a nullable variable is marked with <code>?</code>; and</li><li>Dart requires nullable values to be handled before unsafe use.</li></ul>
+<p>The type tells us whether absence is possible.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="2">
+  <h2 class="step__title">Non-Nullable by Default</h2>
+  <div class="step__body">
+    <p>Types are non-nullable by default. A variable of type <code>String</code> must always hold a string.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-type">String</span> course = <span class="tok-string">&#x27;COMP 4768&#x27;</span>;
+  <span class="tok-function">print</span>(course.length);
+
+  <span class="tok-comment">// course = null; // Compile-time error</span>
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>9</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="3">
+  <h2 class="step__title">Nullable Types</h2>
+  <div class="step__body">
+    <p>Add <code>?</code> to a type when absence is a valid state.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">int</span>? score;
+<span class="tok-type">String</span>? nickname = <span class="tok-string">&#x27;Dash&#x27;</span>;
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(score);
+  <span class="tok-function">print</span>(nickname);
+
+  nickname = <span class="tok-keyword">null</span>;
+  <span class="tok-function">print</span>(nickname);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>null
+Dash
+null</code></pre>
+<figure class="figure figure--diagram"><svg viewBox="0 0 380 159" width="23.75em" role="img" aria-label="String? to String value; String? to null"><rect class="diagram__box" x="16.0" y="58.0" width="152" height="43.0" rx="4"/><text class="diagram__text diagram__text--mono" x="92.0" y="79.5" text-anchor="middle" dominant-baseline="central">String?</text><rect class="diagram__box" x="212.0" y="16.0" width="152" height="43.0" rx="4"/><text class="diagram__text diagram__text--mono" x="288.0" y="37.5" text-anchor="middle" dominant-baseline="central">String value</text><rect class="diagram__box" x="212.0" y="100.0" width="152" height="43.0" rx="4"/><text class="diagram__text diagram__text--mono" x="288.0" y="121.5" text-anchor="middle" dominant-baseline="central">null</text><line class="diagram__edge" x1="168.0" y1="79.5" x2="205.5" y2="43.7"/><polygon class="diagram__head" points="212.0,37.5 208.3,46.6 202.7,40.8"/><line class="diagram__edge" x1="168.0" y1="79.5" x2="205.5" y2="115.3"/><polygon class="diagram__head" points="212.0,121.5 202.7,118.2 208.3,112.4"/></svg></figure>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Which declarations are accepted: top-level <code>int a;</code>, <code>int? b;</code>, <code>int c = null;</code>, and <code>String? d = 'x';</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p><code>int? b;</code> and <code>String? d = 'x';</code> are accepted. Top-level <code>int a;</code> has no value for its non-nullable type, and <code>int c = null;</code> tries to store <code>null</code> in a non-nullable variable.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="4">
+  <h2 class="step__title">Checking for Null</h2>
+  <div class="step__body">
+    <p>A null check separates the absent case from the case that has a value.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> <span class="tok-function">greeting</span>(<span class="tok-type">String</span>? name) {
+  <span class="tok-keyword">if</span> (name != <span class="tok-keyword">null</span>) {
+    <span class="tok-keyword">return</span> <span class="tok-string">&#x27;Hello, $name!&#x27;</span>;
+  }
+  <span class="tok-keyword">return</span> <span class="tok-string">&#x27;Hello, mysterious user!&#x27;</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">greeting</span>(<span class="tok-string">&#x27;Ada&#x27;</span>));
+  <span class="tok-function">print</span>(<span class="tok-function">greeting</span>(<span class="tok-keyword">null</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Hello, Ada!
+Hello, mysterious user!</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="5">
+  <h2 class="step__title">The ?? Operator</h2>
+  <div class="step__body">
+    <p>The <code>??</code> operator uses the value on its left unless that value is <code>null</code>. Otherwise, it uses the value on its right.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span> <span class="tok-function">displayName</span>(<span class="tok-type">String</span>? nickname) {
+  <span class="tok-keyword">return</span> nickname ?? <span class="tok-string">&#x27;Guest&#x27;</span>;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">displayName</span>(<span class="tok-string">&#x27;Dash&#x27;</span>));
+  <span class="tok-function">print</span>(<span class="tok-function">displayName</span>(<span class="tok-keyword">null</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Dash
+Guest</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="6">
+  <h2 class="step__title">The ??= Operator</h2>
+  <div class="step__body">
+    <p>The <code>??=</code> operator assigns only when the variable is currently <code>null</code>.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-type">int</span>? score;
+
+  score ??= <span class="tok-number">5</span>;
+  score ??= <span class="tok-number">10</span>;
+
+  <span class="tok-function">print</span>(score);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>5</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>Suppose <code>String? foo = 'a string';</code> and <code>String? bar;</code>. Fill the operators: <code>String? baz = foo ___ bar;</code> and <code>bar ___ 'a string';</code>. Then evaluate <code>null ?? 12</code> and <code>1 ?? 3</code>.</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>Use <code>??</code> in the first blank and <code>??=</code> in the second. The expressions produce <code>12</code> and <code>1</code>.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="7">
+  <h2 class="step__title">Conditional Access</h2>
+  <div class="step__body">
+    <p>The <code>?.</code> operator accesses a member only when the value before it is not <code>null</code>.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-type">String</span>? message = <span class="tok-string">&#x27;Hello World&#x27;</span>;
+  <span class="tok-function">print</span>(message?.<span class="tok-function">toLowerCase</span>().length);
+
+  message = <span class="tok-keyword">null</span>;
+  <span class="tok-function">print</span>(message?.<span class="tok-function">toLowerCase</span>().length);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>11
+null</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>If <code>message</code> is <code>null</code>, does <code>message?.toLowerCase().length</code> call either member? What value does the whole expression produce?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>It calls neither member. Conditional access stops at <code>null</code>, and the whole expression produces <code>null</code>.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="8">
+  <h2 class="step__title">The ! Operator</h2>
+  <div class="step__body">
+    <p>The <code>!</code> operator asserts that a nullable value is not <code>null</code>. The program fails at runtime if the assertion is wrong.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">int</span> <span class="tok-function">characterCount</span>(<span class="tok-type">String</span>? text) {
+  <span class="tok-keyword">return</span> text!.length;
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">characterCount</span>(<span class="tok-string">&#x27;Dart&#x27;</span>));
+  <span class="tok-function">print</span>(<span class="tok-function">characterCount</span>(<span class="tok-keyword">null</span>));
+  <span class="tok-function">print</span>(<span class="tok-string">&#x27;Done&#x27;</span>);
+}</code></pre>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>What does the first call print? Does the program reach <code>print('Done')</code>?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p>The first call prints <code>4</code>. The second call applies <code>!</code> to <code>null</code> and throws at runtime, so the program does not print <code>Done</code>.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="9">
+  <h2 class="step__title">Nullable Parameters</h2>
+  <div class="step__body">
+    <p>A parameter can accept <code>null</code> when its type is nullable.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">greet</span>({<span class="tok-type">String</span>? middleName}) {
+  <span class="tok-function">print</span>(middleName ?? <span class="tok-string">&#x27;No middle name&#x27;</span>);
+}
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">greet</span>(middleName: <span class="tok-string">&#x27;Grace&#x27;</span>);
+  <span class="tok-function">greet</span>();
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>Grace
+No middle name</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="10">
+  <h2 class="step__title">Nullable Return Values</h2>
+  <div class="step__body">
+    <p>A function uses a nullable return type when a valid call may produce no value.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-type">String</span>? <span class="tok-function">upperCaseIt</span>(<span class="tok-type">String</span>? str) =&gt; str?.<span class="tok-function">toUpperCase</span>();
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(<span class="tok-function">upperCaseIt</span>(<span class="tok-string">&#x27;Dart&#x27;</span>));
+  <span class="tok-function">print</span>(<span class="tok-function">upperCaseIt</span>(<span class="tok-keyword">null</span>));
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>DART
+null</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="11">
+  <h2 class="step__title">Map Lookup Revisited</h2>
+  <div class="step__body">
+    <p>A map lookup returns a nullable value because the requested key may not exist.</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-keyword">var</span> distances = {
+    <span class="tok-string">&#x27;Earth&#x27;</span>: <span class="tok-number">0.0</span>,
+    <span class="tok-string">&#x27;Venus&#x27;</span>: <span class="tok-number">41.0</span>,
+  };
+
+  <span class="tok-function">print</span>(distances[<span class="tok-string">&#x27;Mars&#x27;</span>]);
+  <span class="tok-function">print</span>(distances[<span class="tok-string">&#x27;Mars&#x27;</span>] ?? <span class="tok-number">0.0</span>);
+}</code></pre>
+<pre class="code-block" data-lang="text"><code>null
+0.0</code></pre>
+  </div>
+  
+</section>
+    <section class="step" data-index="12">
+  <h2 class="step__title">Late and Nullable Variables</h2>
+  <div class="step__body">
+    <p><code>late</code> and <code>?</code> describe different situations.</p>
+<div class="table-wrap"><table><thead><tr><th>Declaration</th><th>Meaning</th></tr></thead><tbody><tr><td><code>late String token;</code></td><td>A string will be assigned before it is read.</td></tr><tr><td><code>String? token;</code></td><td>The token may legitimately be absent.</td></tr></tbody></table></div>
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><p>For <code>String joinWithCommas(int a, [int? b, int? c])</code>, trace the call <code>joinWithCommas(1, 2)</code>. Which parameter is <code>null</code>, and what must the function body check?</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><p><code>a</code> is <code>1</code>, <code>b</code> is <code>2</code>, and <code>c</code> is <code>null</code>. The body must check whether each nullable optional parameter is present before adding it to the result.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-practice data-index="13">
+  <h2 class="step__title">Practice: Null Safety</h2>
+  <div class="step__body">
+    
+  </div>
+  <div class="step__exercises">
+    <div class="exercise">
+      <div class="exercise__q">
+        <div class="exercise__label">Question</div>
+        <div class="exercise__q-body"><ol><li>Declare a nullable <code>String</code> named <code>name</code> with the value <code>'Jane'</code>, and a nullable <code>String</code> named <code>address</code> with the value <code>null</code>.</li><li>Complete <code>String? upperCaseIt(String? str)</code> so it returns an uppercase string or <code>null</code> by using <code>?.</code>.</li><li>Trace: <code>int? n; n ??= 3; n ??= 5; print(n);</code>.</li><li>Trace: <code>String? s; print(s?.length); print(s!.length);</code>. What happens at each <code>print</code>?</li></ol>
+<p>For home study, use the Dart cheatsheet exercises for <a href="https://dart.dev/resources/dart-cheatsheet#nullable-variables" target="_blank" rel="noopener">Nullable variables</a>, <a href="https://dart.dev/resources/dart-cheatsheet#null-aware-operators" target="_blank" rel="noopener">Null-aware operators</a>, <a href="https://dart.dev/resources/dart-cheatsheet#conditional-property-access" target="_blank" rel="noopener">Conditional property access</a>, <a href="https://dart.dev/resources/dart-cheatsheet#optional-positional-parameters" target="_blank" rel="noopener">Optional positional parameters</a>, and <a href="https://dart.dev/resources/dart-cheatsheet#named-parameters" target="_blank" rel="noopener">Named parameters</a>. The named-parameter exercise builds a <code>copyWith</code> method, a pattern used throughout Flutter code.</p></div>
+      </div>
+      <div class="exercise__blank" aria-hidden="true"></div>
+      <div class="exercise__a">
+        <div class="exercise__label exercise__label--answer">Answer</div>
+        <div class="exercise__a-body"><ol><li><code>String? name = 'Jane';</code> and <code>String? address = null;</code>.</li><li><code>String? upperCaseIt(String? str) =&gt; str?.toUpperCase();</code>.</li><li>It prints <code>3</code>. The first conditional assignment stores <code>3</code>, and the second leaves it unchanged.</li><li><code>s</code> starts as <code>null</code>. The first line prints <code>null</code>, and the second applies <code>!</code> to <code>null</code> and throws at runtime.</li></ol></div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section class="step" data-index="14">
+  <h2 class="step__title">Null-Safety Operators</h2>
+  <div class="step__body">
+    <div class="docblock docblock--reference">
+      <div class="docblock__label">Reference</div>
+      <div class="docblock__body"><p>Use this table when choosing how to handle a value that may be absent.</p>
+<div class="table-wrap"><table><thead><tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><code>T?</code></td><td>A value of type <code>T</code> or <code>null</code></td><td><code>String? nickname</code></td></tr><tr><td><code>value ?? fallback</code></td><td>Use a fallback when the value is <code>null</code></td><td><code>nickname ?? 'Guest'</code></td></tr><tr><td><code>variable ??= value</code></td><td>Assign only when the variable is <code>null</code></td><td><code>nickname ??= 'Dash'</code></td></tr><tr><td><code>value?.member</code></td><td>Access the member only when the value is present</td><td><code>nickname?.length</code></td></tr><tr><td><code>value!</code></td><td>Assert that the value is not <code>null</code></td><td><code>nickname!.length</code></td></tr><tr><td><code>late T</code></td><td>Promise to assign a non-null value before reading it</td><td><code>late String token</code></td></tr><tr><td><code>?..</code></td><td>Start a cascade only when its target is not <code>null</code></td><td>Covered with cascades in L5</td></tr></tbody></table></div>
+<h3>Choosing a Form</h3>
+<div class="table-wrap"><table><thead><tr><th>Situation</th><th>Prefer</th></tr></thead><tbody><tr><td>Absence is meaningful</td><td>A nullable type and explicit handling</td></tr><tr><td>A fallback has a clear meaning</td><td><code>??</code></td></tr><tr><td>Work should happen only when present</td><td>A null check or <code>?.</code></td></tr><tr><td>A value must be initialized later</td><td><code>late</code></td></tr><tr><td>Another fact proves the value is present</td><td><code>!</code>, used carefully</td></tr></tbody></table></div>
+<p>Read more in Dart's <a href="https://dart.dev/null-safety" target="_blank" rel="noopener">Sound null safety guide</a>.</p></div>
+    </div>
+  </div>
+  
+</section>
+    </div>
+
+    <div class="stepnav">
+      <button class="btn btn--ghost" id="btn-back">Back</button>
+      <button class="btn btn--primary" id="btn-next">Next</button>
+    </div>
+  </main>
+</div>
+
+<aside class="notes-panel" id="notes-panel">
+  <div class="resizer resizer--notes" id="notes-resizer" role="separator"
+       aria-orientation="vertical" tabindex="0" title="Drag to resize"></div>
+  <div class="notes-panel__header">
+    <span>AI Explanation</span>
+    <button class="icon-btn icon-btn--close" id="btn-notes-close" title="Close (N)">Close</button>
+  </div>
+  <div class="notes-panel__body" id="notes-body">
+    <div class="note" data-index="0">
+  <h3 class="note__title">The Problem with Null</h3>
+  <p>L2 showed that a missing map key produces <code>null</code>. L3 used <code>String? email</code> and <code>required this.red</code>. This lecture explains the rules behind that syntax.</p>
+<p>The parameter type <code>String</code> promises a real string. Passing <code>null</code> breaks that promise, so Dart reports a compile-time error before the program starts.</p>
+<p>This early check is useful in Flutter applications. The developer sees the problem during development instead of waiting for a user to reach the faulty line.</p>
+</div>
+    <div class="note" data-index="1">
+  <h3 class="note__title">Sound Null Safety</h3>
+  <p>Sound means that Dart enforces the type promise throughout the program. If a value has type <code>String</code>, code can use String members without checking for <code>null</code> first.</p>
+<p>If a value has type <code>String?</code>, Dart requires the code to check, provide a fallback, use conditional access, or make an assertion before using String members.</p>
+<p>Null safety moves many mistakes from runtime to compile time. It does not remove <code>null</code>; it makes possible absence visible in the type.</p>
+</div>
+    <div class="note" data-index="2">
+  <h3 class="note__title">Non-Nullable by Default</h3>
+  <p>The declaration gives <code>course</code> a valid string immediately. Every later assignment must also supply a <code>String</code>.</p>
+<p>The commented assignment is rejected because <code>null</code> is not a <code>String</code>. The compiler therefore knows that <code>course.length</code> is safe.</p>
+<p>Types such as <code>int</code>, <code>double</code>, <code>bool</code>, <code>String</code>, collection types, and user-defined class types are non-nullable unless their type name ends with <code>?</code>.</p>
+</div>
+    <div class="note" data-index="3">
+  <h3 class="note__title">Nullable Types</h3>
+  <p>Top-level and static variables that have nullable types start as <code>null</code> when no initializer is written. The example places <code>score</code> at the top level so it can be read safely in <code>main</code>.</p>
+<p>An uninitialized nullable variable starts as <code>null</code>. This also applies to a local declaration such as <code>String? name;</code>.</p>
+<p>The diagram shows the two possible states. A <code>String?</code> variable can hold a <code>String</code> value or <code>null</code>. A <code>String</code> variable has only the first possibility.</p>
+</div>
+    <div class="note" data-index="4">
+  <h3 class="note__title">Checking for Null</h3>
+  <p>Before the <code>if</code> statement, <code>name</code> has type <code>String?</code>. Inside the branch where <code>name != null</code>, Dart knows that <code>name</code> contains a string.</p>
+<p>This temporary narrowing is called type promotion. The check proves that the value is non-null along that path through the function.</p>
+<p>The second return handles the absent case. Write both cases explicitly when the program needs different behavior for each one.</p>
+</div>
+    <div class="note" data-index="5">
+  <h3 class="note__title">The ?? Operator</h3>
+  <p>The first call returns <code>'Dash'</code> because the nullable value is present. The second returns <code>'Guest'</code> because the left side is <code>null</code>.</p>
+<p>The right side is evaluated only when it is needed. This makes <code>??</code> useful for a fallback value that may take work to produce.</p>
+<p>Use <code>??</code> when the program needs one expression representing a value or a fallback when it is absent.</p>
+</div>
+    <div class="note" data-index="6">
+  <h3 class="note__title">The ??= Operator</h3>
+  <p>The first assignment runs because <code>score</code> starts as <code>null</code>. It stores <code>5</code>. The second assignment does nothing because <code>score</code> already has a value.</p>
+<p>The operator does not test whether a number is zero or whether a string is empty. It tests only for <code>null</code>.</p>
+<p>Compare the two operators: <code>value ?? fallback</code> produces a value, while <code>variable ??= fallback</code> may change a variable.</p>
+</div>
+    <div class="note" data-index="7">
+  <h3 class="note__title">Conditional Access</h3>
+  <p>With a non-null string, <code>?.</code> accesses the same member that <code>.</code> would access. With <code>null</code>, the access is skipped and the whole chain evaluates to <code>null</code>.</p>
+<p>In current Dart, one <code>?.</code> at the start makes later accesses in the same chain conditional too. You can also chain through values that are themselves nullable:</p>
+<pre class="code-block" data-lang="dart"><code>user?.address?.city</code></pre>
+<p>The result of conditional access is nullable because one possible result is absent. For example, <code>message?.length</code> has type <code>int?</code>.</p>
+</div>
+    <div class="note" data-index="8">
+  <h3 class="note__title">The ! Operator</h3>
+  <p>The type <code>String?</code> says that absence is possible. The <code>!</code> operator is the programmer's claim that the value is present at this exact point.</p>
+<p>The assertion changes what the type checker allows. It does not check or repair the data. For example, <code>json['name']!</code> throws if the map contains no <code>'name'</code> key.</p>
+<p>Prefer a null check, <code>?.</code>, or <code>??</code> when those operators express the intended behavior. Use <code>!</code> only when another fact guarantees that the value cannot be null and Dart cannot prove that fact.</p>
+</div>
+    <div class="note" data-index="9">
+  <h3 class="note__title">Nullable Parameters</h3>
+  <p>The caller may omit <code>middleName</code> because its type allows <code>null</code>. An omitted optional named parameter receives <code>null</code> when no default is provided.</p>
+<p>A non-nullable named parameter needs a default value or the <code>required</code> modifier. This explains the constructor form from L3:</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-function">MyColor</span>({<span class="tok-keyword">required</span> <span class="tok-keyword">this</span>.red, <span class="tok-keyword">required</span> <span class="tok-keyword">this</span>.green, <span class="tok-keyword">required</span> <span class="tok-keyword">this</span>.blue});</code></pre>
+<p>Without <code>required</code> or defaults, callers could omit the arguments and leave the non-nullable fields without values.</p>
+</div>
+    <div class="note" data-index="10">
+  <h3 class="note__title">Nullable Return Values</h3>
+  <p>The return type <code>String?</code> tells every caller to handle two possibilities. A non-null input produces an uppercase string, while a null input produces <code>null</code>.</p>
+<p>The <code>?.</code> operator makes the function concise because the desired output is also absent when the input is absent.</p>
+<p>A non-nullable return type such as <code>String</code> would promise that every path returns a string. That promise would require a fallback or some other handling for the null case.</p>
+</div>
+    <div class="note" data-index="11">
+  <h3 class="note__title">Map Lookup Revisited</h3>
+  <p>L2 showed that a missing map key produces <code>null</code>. Null safety explains the type behind that behavior: a lookup in <code>Map&lt;String, double&gt;</code> returns <code>double?</code>.</p>
+<p>The first lookup finds no <code>'Mars'</code> key and returns <code>null</code>, as it did in L2. The second lookup asks for the same missing key, then <code>??</code> supplies <code>0.0</code>.</p>
+<p>A fallback is correct only when it has the intended meaning. In a distance calculation, zero might incorrectly mean the same location. Another program may need to display <code>unknown</code> or handle the missing key separately.</p>
+</div>
+    <div class="note" data-index="12">
+  <h3 class="note__title">Late and Nullable Variables</h3>
+  <p>Use <code>late</code> when initialization must happen later but the completed program still requires a value. Reading a top-level <code>late</code> variable before assigning it throws a <code>LateInitializationError</code>:</p>
+<pre class="code-block" data-lang="dart"><code><span class="tok-keyword">late</span> <span class="tok-type">String</span> token;
+
+<span class="tok-keyword">void</span> <span class="tok-function">main</span>() {
+  <span class="tok-function">print</span>(token); <span class="tok-comment">// Runtime error</span>
+}</code></pre>
+<p>Use a nullable type when no value is a valid state that the program should handle. Changing a nullable variable to <code>late</code> replaces explicit handling with a promise that can fail at runtime.</p>
+</div>
+    <div class="note" data-index="13">
+  <h3 class="note__title">Practice: Null Safety</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+    <div class="note" data-index="14">
+  <h3 class="note__title">Null-Safety Operators</h3>
+  <p><em>No AI Explanation for this slide.</em></p>
+</div>
+  </div>
+</aside>
+
+<script>window.__ARC_NAMES__ = ["Null Safety", "Null Safety", "Null Safety", "Null Safety", "Working with Nullable Values", "Working with Nullable Values", "Working with Nullable Values", "Working with Nullable Values", "Working with Nullable Values", "Nulls in Functions and Objects", "Nulls in Functions and Objects", "Nulls in Functions and Objects", "Nulls in Functions and Objects", "Practice", "Study Reference"];</script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
