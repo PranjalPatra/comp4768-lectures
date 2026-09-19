@@ -90,8 +90,8 @@
     <button class="sidebar__item" data-index="17" title="Linux Verification"><span class="sidebar__bullet">18</span><span class="sidebar__label">Linux Verification</span></button>
     <div class="sidebar__arc">Submission</div>
     <button class="sidebar__item" data-index="18" title="Verification and Submission"><span class="sidebar__bullet">19</span><span class="sidebar__label">Verification and Submission</span></button>
-    <div class="sidebar__arc">Command Reference</div>
-    <button class="sidebar__item" data-index="19" title="Verification Logs"><span class="sidebar__bullet">20</span><span class="sidebar__label">Verification Logs</span></button>
+    <div class="sidebar__arc">References</div>
+    <button class="sidebar__item" data-index="19" title="Setup Documentation"><span class="sidebar__bullet">20</span><span class="sidebar__label">Setup Documentation</span></button>
   </nav>
   <div class="sidebar-scrim" id="sidebar-scrim"></div>
   <div class="resizer resizer--sidebar" id="sidebar-resizer" role="separator"
@@ -192,9 +192,35 @@ flutter test</code></pre>
   <div class="step__body">
     <p>Keep the emulator running and open PowerShell in:</p>
 <pre class="code-block" data-lang="text"><code>C:\dev\course\hello_flutter</code></pre>
-<p>Run the Windows verification block on the reference page. It creates:</p>
-<pre class="code-block" data-lang="text"><code>setup_logs\phase1_windows_setup.txt</code></pre>
-<p>Open it with <code>notepad $Log</code> and check it before submitting it to Brightspace.</p>
+<p>Run this complete block:</p>
+<pre class="code-block" data-lang="powershell"><code>New-Item -ItemType Directory -Force setup_logs | Out-Null
+$Log = Join-Path (Get-Location) &quot;setup_logs\phase1_windows_setup.txt&quot;
+Start-Transcript -Path $Log -Force
+Write-Output &quot;PHASE 1 WINDOWS SETUP CHECK&quot;
+Get-Date
+Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsTotalPhysicalMemory
+git --version
+gh auth status
+node --version
+npm --version
+java --version
+flutter --version
+dart --version
+flutter doctor -v
+flutter emulators
+flutter devices
+adb -e emu avd name
+adb -e shell getprop ro.build.version.release
+adb -e shell getprop ro.build.version.sdk
+firebase --version
+firebase projects:list
+flutterfire --version
+flutter analyze
+flutter test
+flutter build apk --debug
+Stop-Transcript</code></pre>
+<p>This creates <code>setup_logs\phase1_windows_setup.txt</code>. Open it with <code>notepad $Log</code>.</p>
+<p>Before submitting, check for Android 17, API 37, <code>Pixel_9a_API_37</code>, no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
   </div>
   
 </section>
@@ -255,9 +281,36 @@ flutter test</code></pre>
   <h2 class="step__title">macOS Verification</h2>
   <div class="step__body">
     <p>Keep the emulator running and open Terminal in the <code>hello_flutter</code> folder.</p>
-<p>Run the macOS verification block on the reference page. It creates:</p>
-<pre class="code-block" data-lang="text"><code>setup_logs/phase1_macos_setup.txt</code></pre>
-<p>Open it with <code>open "$LOG"</code> and check it before submitting it to Brightspace.</p>
+<p>Run this complete block:</p>
+<pre class="code-block" data-lang="bash"><code>mkdir -p setup_logs
+LOG=&quot;setup_logs/phase1_macos_setup.txt&quot;
+{
+  echo &quot;PHASE 1 MACOS SETUP CHECK&quot;
+  date
+  sw_vers
+  uname -m
+  git --version
+  gh auth status
+  node --version
+  npm --version
+  java --version
+  flutter --version
+  dart --version
+  flutter doctor -v
+  flutter emulators
+  flutter devices
+  adb -e emu avd name
+  adb -e shell getprop ro.build.version.release
+  adb -e shell getprop ro.build.version.sdk
+  firebase --version
+  firebase projects:list
+  flutterfire --version
+  flutter analyze
+  flutter test
+  flutter build apk --debug
+} 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
+<p>This creates <code>setup_logs/phase1_macos_setup.txt</code>. Open it with <code>open "$LOG"</code>.</p>
+<p>Before submitting, check for Android 17, API 37, <code>Pixel_9a_API_37</code>, no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
   </div>
   
 </section>
@@ -316,85 +369,7 @@ flutter test</code></pre>
   <h2 class="step__title">Linux Verification</h2>
   <div class="step__body">
     <p>Keep the emulator running and open Terminal in the <code>hello_flutter</code> folder.</p>
-<p>Run the Linux verification block on the reference page. It creates:</p>
-<pre class="code-block" data-lang="text"><code>setup_logs/phase1_linux_setup.txt</code></pre>
-<p>Open it with your normal text editor, such as <code>xdg-open "$LOG"</code>, and check it before submitting it to Brightspace.</p>
-  </div>
-  
-</section>
-    <section class="step" data-index="18">
-  <h2 class="step__title">Verification and Submission</h2>
-  <div class="step__body">
-    <p>Before submitting, confirm that the log shows:</p>
-<ul><li>Android 17 and API 37;</li><li><code>Pixel_9a_API_37</code>;</li><li>no Android toolchain error;</li><li>successful <code>flutter analyze</code> and <code>flutter test</code>;</li><li>a successful debug APK build; and</li><li>signed-in GitHub and Firebase accounts.</li></ul>
-<p>Submit only your operating system's Phase 1 setup log to Brightspace.</p>
-  </div>
-  
-</section>
-    <section class="step" data-index="19">
-  <h2 class="step__title">Verification Logs</h2>
-  <div class="step__body">
-    <div class="docblock docblock--reference">
-      <div class="docblock__label">Reference</div>
-      <div class="docblock__body"><p>Run only the block for your operating system. Keep <code>Pixel_9a_API_37</code> running and execute the block from the <code>hello_flutter</code> project folder.</p>
-<h3>Windows</h3>
-<pre class="code-block" data-lang="powershell"><code>New-Item -ItemType Directory -Force setup_logs | Out-Null
-$Log = Join-Path (Get-Location) &quot;setup_logs\phase1_windows_setup.txt&quot;
-Start-Transcript -Path $Log -Force
-Write-Output &quot;PHASE 1 WINDOWS SETUP CHECK&quot;
-Get-Date
-Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsTotalPhysicalMemory
-git --version
-gh auth status
-node --version
-npm --version
-java --version
-flutter --version
-dart --version
-flutter doctor -v
-flutter emulators
-flutter devices
-adb -e emu avd name
-adb -e shell getprop ro.build.version.release
-adb -e shell getprop ro.build.version.sdk
-firebase --version
-firebase projects:list
-flutterfire --version
-flutter analyze
-flutter test
-flutter build apk --debug
-Stop-Transcript</code></pre>
-<p>Open the log with <code>notepad $Log</code>.</p>
-<h3>macOS</h3>
-<pre class="code-block" data-lang="bash"><code>mkdir -p setup_logs
-LOG=&quot;setup_logs/phase1_macos_setup.txt&quot;
-{
-  echo &quot;PHASE 1 MACOS SETUP CHECK&quot;
-  date
-  sw_vers
-  uname -m
-  git --version
-  gh auth status
-  node --version
-  npm --version
-  java --version
-  flutter --version
-  dart --version
-  flutter doctor -v
-  flutter emulators
-  flutter devices
-  adb -e emu avd name
-  adb -e shell getprop ro.build.version.release
-  adb -e shell getprop ro.build.version.sdk
-  firebase --version
-  firebase projects:list
-  flutterfire --version
-  flutter analyze
-  flutter test
-  flutter build apk --debug
-} 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
-<p>Open the log with <code>open "$LOG"</code>.</p>
-<h3>Linux</h3>
+<p>Run this complete block:</p>
 <pre class="code-block" data-lang="bash"><code>mkdir -p setup_logs
 LOG=&quot;setup_logs/phase1_linux_setup.txt&quot;
 {
@@ -422,10 +397,24 @@ LOG=&quot;setup_logs/phase1_linux_setup.txt&quot;
   flutter test
   flutter build apk --debug
 } 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
-<p>Open the log with your normal text editor, for example <code>xdg-open "$LOG"</code>.</p>
-<h3>Help</h3>
-<ul><li><a href="https://docs.flutter.dev/platform-integration/android/setup" target="_blank" rel="noopener">Flutter Android setup</a></li><li><a href="https://developer.android.com/studio/run/managing-avds" target="_blank" rel="noopener">Android virtual devices</a></li><li><a href="https://firebase.google.com/docs/cli" target="_blank" rel="noopener">Firebase CLI</a></li><li><a href="https://firebase.google.com/docs/flutter/setup" target="_blank" rel="noopener">FlutterFire</a></li></ul></div>
-    </div>
+<p>This creates <code>setup_logs/phase1_linux_setup.txt</code>. Open it with your normal text editor, such as <code>xdg-open "$LOG"</code>.</p>
+<p>Before submitting, check for Android 17, API 37, <code>Pixel_9a_API_37</code>, no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="18">
+  <h2 class="step__title">Verification and Submission</h2>
+  <div class="step__body">
+    <p>Before submitting, confirm that the log shows:</p>
+<ul><li>Android 17 and API 37;</li><li><code>Pixel_9a_API_37</code>;</li><li>no Android toolchain error;</li><li>successful <code>flutter analyze</code> and <code>flutter test</code>;</li><li>a successful debug APK build; and</li><li>signed-in GitHub and Firebase accounts.</li></ul>
+<p>Submit only your operating system's Phase 1 setup log to Brightspace.</p>
+  </div>
+  
+</section>
+    <section class="step" data-index="19">
+  <h2 class="step__title">Setup Documentation</h2>
+  <div class="step__body">
+    <ul><li><a href="https://docs.flutter.dev/platform-integration/android/setup" target="_blank" rel="noopener">Flutter Android setup</a></li><li><a href="https://developer.android.com/studio/run/managing-avds" target="_blank" rel="noopener">Android virtual devices</a></li><li><a href="https://firebase.google.com/docs/cli" target="_blank" rel="noopener">Firebase CLI</a></li><li><a href="https://firebase.google.com/docs/flutter/setup" target="_blank" rel="noopener">FlutterFire</a></li></ul>
   </div>
   
 </section>
@@ -505,9 +494,7 @@ flutter run -d &lt;emulator-device-id&gt;</code></pre>
 </div>
     <div class="note" data-index="7">
   <h3 class="note__title">Windows Verification</h3>
-  <p>The log should show Android 17, API 37, and the AVD name <code>Pixel_9a_API_37</code>. Flutter Doctor should report no Android toolchain error.</p>
-<p>It should also show successful Flutter analysis, tests, and debug APK build, along with signed-in GitHub and Firebase accounts.</p>
-<p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files.</p>
+  <p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files. If a check fails, correct the installation and run the complete block again.</p>
 </div>
     <div class="note" data-index="8">
   <h3 class="note__title">macOS Basic Tools and Flutter</h3>
@@ -545,9 +532,7 @@ flutter run -d &lt;emulator-device-id&gt;</code></pre>
 </div>
     <div class="note" data-index="12">
   <h3 class="note__title">macOS Verification</h3>
-  <p>The log should show Android 17, API 37, and the AVD name <code>Pixel_9a_API_37</code>. Flutter Doctor should report no Android toolchain error.</p>
-<p>It should also show successful Flutter analysis, tests, and debug APK build, along with signed-in GitHub and Firebase accounts.</p>
-<p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files.</p>
+  <p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files. If a check fails, correct the installation and run the complete block again.</p>
 </div>
     <div class="note" data-index="13">
   <h3 class="note__title">Linux Basic Tools and KVM</h3>
@@ -592,9 +577,7 @@ flutter run -d &lt;emulator-device-id&gt;</code></pre>
 </div>
     <div class="note" data-index="17">
   <h3 class="note__title">Linux Verification</h3>
-  <p>The log should show Android 17, API 37, and the AVD name <code>Pixel_9a_API_37</code>. Flutter Doctor should report no Android toolchain error.</p>
-<p>It should also show successful Flutter analysis, tests, and debug APK build, along with signed-in GitHub and Firebase accounts.</p>
-<p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files.</p>
+  <p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files. If a check fails, correct the installation and run the complete block again.</p>
 </div>
     <div class="note" data-index="18">
   <h3 class="note__title">Verification and Submission</h3>
@@ -604,13 +587,13 @@ flutter run -d &lt;emulator-device-id&gt;</code></pre>
 <p>If a check fails, return to the matching setup slide and correct the installation before creating the final log.</p>
 </div>
     <div class="note" data-index="19">
-  <h3 class="note__title">Verification Logs</h3>
-  <p><em>No AI Explanation for this slide.</em></p>
+  <h3 class="note__title">Setup Documentation</h3>
+  <p>Use the documentation when an installation step or command behaves differently on your computer. The verification commands themselves are on the Windows, macOS, and Linux verification slides.</p>
 </div>
   </div>
 </aside>
 
-<script>window.__ARC_NAMES__ = ["Getting Ready", "Getting Ready", "Getting Ready", "Windows", "Windows", "Windows", "Windows", "Windows", "macOS", "macOS", "macOS", "macOS", "macOS", "Linux", "Linux", "Linux", "Linux", "Linux", "Submission", "Command Reference"];</script>
+<script>window.__ARC_NAMES__ = ["Getting Ready", "Getting Ready", "Getting Ready", "Windows", "Windows", "Windows", "Windows", "Windows", "macOS", "macOS", "macOS", "macOS", "macOS", "Linux", "Linux", "Linux", "Linux", "Linux", "Submission", "References"];</script>
 <script src="../assets/app.js"></script>
 </body>
 </html>
