@@ -126,7 +126,7 @@
   <h2 class="step__title">Course Emulator</h2>
   <div class="step__body">
     <p>Create one Android Virtual Device with this configuration:</p>
-<div class="table-wrap"><table><thead><tr><th>Setting</th><th>Required value</th></tr></thead><tbody><tr><td>Name</td><td><code>Pixel_9a_API_37</code></td></tr><tr><td>Device</td><td>Pixel 9a</td></tr><tr><td>Android version</td><td>Android 17</td></tr><tr><td>API level</td><td>37</td></tr><tr><td>Image</td><td>Google Play</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Setting</th><th>Required value</th></tr></thead><tbody><tr><td>Name</td><td><code>Pixel_9a_API_36</code> or <code>Pixel_9a_API_37</code>, matching the image</td></tr><tr><td>Device</td><td>Pixel 9a</td></tr><tr><td>Android version</td><td>Android 16 or Android 17</td></tr><tr><td>API level</td><td>36 or 37, matching the Android version</td></tr><tr><td>Image</td><td>Google Play</td></tr></tbody></table></div>
 <p>Use ARM64 on an Apple silicon Mac. Use x86_64 on Windows, Linux, and an Intel Mac.</p>
   </div>
   
@@ -162,7 +162,7 @@ java --version</code></pre>
   <div class="step__body">
     <p>Install the current stable <a href="https://developer.android.com/studio" target="_blank" rel="noopener">Android Studio</a> and finish its setup wizard.</p>
 <p>Open <code>File -&gt; Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>. Install:</p>
-<ul><li>Android 17, API 37;</li><li>Android 16, API 36;</li><li>Android SDK Build-Tools and Platform-Tools;</li><li>Android SDK Command-line Tools (latest);</li><li>Android Emulator;</li><li>CMake; and</li><li>NDK (Side by side).</li></ul>
+<ul><li>one stable Android platform: Android 16 (API 36) or Android 17 (API 37);</li><li>Android SDK Build-Tools and Platform-Tools;</li><li>Android SDK Command-line Tools (latest);</li><li>Android Emulator;</li><li>CMake; and</li><li>NDK (Side by side).</li></ul>
   </div>
   
 </section>
@@ -193,9 +193,14 @@ flutter test</code></pre>
     <p>Keep the emulator running and open PowerShell in:</p>
 <pre class="code-block" data-lang="text"><code>C:\dev\course\hello_flutter</code></pre>
 <p>Run this complete block:</p>
-<pre class="code-block" data-lang="powershell"><code>New-Item -ItemType Directory -Force setup_logs | Out-Null
-$Log = Join-Path (Get-Location) &quot;setup_logs\phase1_windows_setup.txt&quot;
-Start-Transcript -Path $Log -Force
+<pre class="code-block" data-lang="powershell"><code>$ProjectDir = (Get-Location).Path
+if (-not (Test-Path -LiteralPath (Join-Path $ProjectDir &quot;pubspec.yaml&quot;))) {
+    throw &quot;Open PowerShell in your hello_flutter project folder, then run this block again. Current folder: $ProjectDir&quot;
+}
+$LogDir = Join-Path $ProjectDir &quot;setup_logs&quot;
+New-Item -ItemType Directory -Path $LogDir -Force -ErrorAction Stop | Out-Null
+$Log = Join-Path $LogDir &quot;phase1_windows_setup.txt&quot;
+&amp; {
 Write-Output &quot;PHASE 1 WINDOWS SETUP CHECK&quot;
 Get-Date
 Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsTotalPhysicalMemory
@@ -218,9 +223,14 @@ flutterfire --version
 flutter analyze
 flutter test
 flutter build apk --debug
-Stop-Transcript</code></pre>
-<p>This creates <code>setup_logs\phase1_windows_setup.txt</code>. Open it with <code>notepad $Log</code>.</p>
-<p>Before submitting, check for Android 17, API 37, <code>Pixel_9a_API_37</code>, no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
+} *&gt;&amp;1 | Tee-Object -FilePath $Log -ErrorAction Stop
+if (-not (Test-Path -LiteralPath $Log -PathType Leaf) -or
+    (Get-Item -LiteralPath $Log).Length -eq 0) {
+    throw &quot;The log is missing or empty: $Log&quot;
+}
+Write-Output &quot;Log saved to: $Log&quot;</code></pre>
+<p>The last line prints the full path to <code>phase1_windows_setup.txt</code>. Open it with <code>notepad $Log</code>. If the block stops before that line, read the PowerShell error and check the displayed current folder.</p>
+<p>Before submitting, check that the running emulator reports either Android 16, API 36, <code>Pixel_9a_API_36</code> or Android 17, API 37, <code>Pixel_9a_API_37</code>. Also check for no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
   </div>
   
 </section>
@@ -244,7 +254,7 @@ gh auth status</code></pre>
   <div class="step__body">
     <p>Download the matching Apple silicon or Intel version of <a href="https://developer.android.com/studio" target="_blank" rel="noopener">Android Studio</a>. Move it to Applications and finish its setup wizard.</p>
 <p>Open <code>Android Studio -&gt; Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>. Install:</p>
-<ul><li>Android 17, API 37;</li><li>Android 16, API 36;</li><li>Android SDK Build-Tools and Platform-Tools;</li><li>Android SDK Command-line Tools (latest);</li><li>Android Emulator;</li><li>CMake; and</li><li>NDK (Side by side).</li></ul>
+<ul><li>one stable Android platform: Android 16 (API 36) or Android 17 (API 37);</li><li>Android SDK Build-Tools and Platform-Tools;</li><li>Android SDK Command-line Tools (latest);</li><li>Android Emulator;</li><li>CMake; and</li><li>NDK (Side by side).</li></ul>
   </div>
   
 </section>
@@ -252,8 +262,8 @@ gh auth status</code></pre>
   <h2 class="step__title">macOS Emulator</h2>
   <div class="step__body">
     <p>Open <code>Tools -&gt; Device Manager</code> and create the course emulator.</p>
-<div class="table-wrap"><table><thead><tr><th>Mac</th><th>System image</th></tr></thead><tbody><tr><td>Apple silicon</td><td>Android 17, API 37, Google Play, ARM64</td></tr><tr><td>Intel</td><td>Android 17, API 37, Google Play, x86_64</td></tr></tbody></table></div>
-<p>Set the AVD name to <code>Pixel_9a_API_37</code>, finish the setup, and wait for the Android home screen.</p>
+<div class="table-wrap"><table><thead><tr><th>Mac</th><th>System image</th></tr></thead><tbody><tr><td>Apple silicon</td><td>Android 16, API 36, or Android 17, API 37; Google Play; ARM64</td></tr><tr><td>Intel</td><td>Android 16, API 36, or Android 17, API 37; Google Play; x86_64</td></tr></tbody></table></div>
+<p>Set the AVD name to <code>Pixel_9a_API_36</code> or <code>Pixel_9a_API_37</code> to match the chosen image, then wait for the Android home screen.</p>
   </div>
   
 </section>
@@ -310,7 +320,7 @@ LOG=&quot;setup_logs/phase1_macos_setup.txt&quot;
   flutter build apk --debug
 } 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
 <p>This creates <code>setup_logs/phase1_macos_setup.txt</code>. Open it with <code>open "$LOG"</code>.</p>
-<p>Before submitting, check for Android 17, API 37, <code>Pixel_9a_API_37</code>, no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
+<p>Before submitting, check that the running emulator reports either Android 16, API 36, <code>Pixel_9a_API_36</code> or Android 17, API 37, <code>Pixel_9a_API_37</code>. Also check for no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
   </div>
   
 </section>
@@ -340,8 +350,8 @@ sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libb
   <h2 class="step__title">Linux Emulator</h2>
   <div class="step__body">
     <p>Open <code>Tools -&gt; Device Manager</code> and choose Pixel 9a with:</p>
-<ul><li>Android 17;</li><li>API 37;</li><li>Google Play; and</li><li>x86_64.</li></ul>
-<p>Set the AVD name to <code>Pixel_9a_API_37</code>, finish the setup, and wait for the Android home screen.</p>
+<ul><li>Android 16, API 36, or Android 17, API 37;</li><li>Google Play; and</li><li>x86_64.</li></ul>
+<p>Set the AVD name to <code>Pixel_9a_API_36</code> or <code>Pixel_9a_API_37</code> to match the chosen image, then wait for the Android home screen.</p>
   </div>
   
 </section>
@@ -398,7 +408,7 @@ LOG=&quot;setup_logs/phase1_linux_setup.txt&quot;
   flutter build apk --debug
 } 2&gt;&amp;1 | tee &quot;$LOG&quot;</code></pre>
 <p>This creates <code>setup_logs/phase1_linux_setup.txt</code>. Open it with your normal text editor, such as <code>xdg-open "$LOG"</code>.</p>
-<p>Before submitting, check for Android 17, API 37, <code>Pixel_9a_API_37</code>, no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
+<p>Before submitting, check that the running emulator reports either Android 16, API 36, <code>Pixel_9a_API_36</code> or Android 17, API 37, <code>Pixel_9a_API_37</code>. Also check for no Android toolchain error, successful analysis, tests, and APK build, and signed-in GitHub and Firebase accounts. Remove any secrets from the log.</p>
   </div>
   
 </section>
@@ -406,7 +416,7 @@ LOG=&quot;setup_logs/phase1_linux_setup.txt&quot;
   <h2 class="step__title">Verification and Submission</h2>
   <div class="step__body">
     <p>Before submitting, confirm that the log shows:</p>
-<ul><li>Android 17 and API 37;</li><li><code>Pixel_9a_API_37</code>;</li><li>no Android toolchain error;</li><li>successful <code>flutter analyze</code> and <code>flutter test</code>;</li><li>a successful debug APK build; and</li><li>signed-in GitHub and Firebase accounts.</li></ul>
+<ul><li>Android 16 with API 36 or Android 17 with API 37;</li><li>a matching emulator name, <code>Pixel_9a_API_36</code> or <code>Pixel_9a_API_37</code>;</li><li>no Android toolchain error;</li><li>successful <code>flutter analyze</code> and <code>flutter test</code>;</li><li>a successful debug APK build; and</li><li>signed-in GitHub and Firebase accounts.</li></ul>
 <p>Submit only your operating system's Phase 1 setup log to Brightspace.</p>
   </div>
   
@@ -487,14 +497,14 @@ flutter doctor -v</code></pre>
 <pre class="code-block" data-lang="powershell"><code>flutterfire configure --platforms=android
 firebase init emulators
 firebase emulators:start</code></pre>
-<p>Start <code>Pixel_9a_API_37</code>, list the available devices, and run the test app:</p>
+<p>Start the Pixel 9a emulator you created, list the available devices, and run the test app:</p>
 <pre class="code-block" data-lang="powershell"><code>flutter devices
 flutter run -d &lt;emulator-device-id&gt;</code></pre>
 <p>Replace <code>&lt;emulator-device-id&gt;</code> with the ID printed by <code>flutter devices</code>. It often looks like <code>emulator-5554</code>. Press <code>q</code> to stop the app, then run <code>flutter build apk --debug</code>.</p>
 </div>
     <div class="note" data-index="7">
   <h3 class="note__title">Windows Verification</h3>
-  <p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files. If a check fails, correct the installation and run the complete block again.</p>
+  <p>Do not submit passwords, access tokens, recovery codes, private keys, or Firebase service-account files. If a check fails, correct the installation and run the complete block again. Use a PowerShell terminal, not Command Prompt, because this block uses PowerShell syntax.</p>
 </div>
     <div class="note" data-index="8">
   <h3 class="note__title">macOS Basic Tools and Flutter</h3>
@@ -524,7 +534,7 @@ flutter doctor -v</code></pre>
 </div>
     <div class="note" data-index="11">
   <h3 class="note__title">macOS Firebase and Test App</h3>
-  <p>Start <code>Pixel_9a_API_37</code>, then run:</p>
+  <p>Start the Pixel 9a emulator you created, then run:</p>
 <pre class="code-block" data-lang="bash"><code>flutter devices
 flutter run -d &lt;emulator-device-id&gt;</code></pre>
 <p>Replace the placeholder with the ID printed by <code>flutter devices</code>. Press <code>q</code> to stop the app, then run <code>flutter build apk --debug</code>.</p>
@@ -555,7 +565,7 @@ sudo usermod -aG kvm &quot;$USER&quot;</code></pre>
     <div class="note" data-index="14">
   <h3 class="note__title">Linux Flutter and Android Tools</h3>
   <p>Download <a href="https://developer.android.com/studio" target="_blank" rel="noopener">Android Studio</a>, follow Google's Linux installation instructions, and finish its setup wizard.</p>
-<p>Under <code>Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>, install Android 17 API 37, Android 16 API 36, Build-Tools, Command-line Tools, Emulator, Platform-Tools, CMake, and NDK.</p>
+<p>Under <code>Settings -&gt; Languages &amp; Frameworks -&gt; Android SDK</code>, install one stable platform, Android 16 API 36 or Android 17 API 37, plus Build-Tools, Command-line Tools, Emulator, Platform-Tools, CMake, and NDK.</p>
 <p>Click Apply, then run:</p>
 <pre class="code-block" data-lang="bash"><code>flutter doctor --android-licenses
 flutter doctor -v</code></pre>
@@ -569,7 +579,7 @@ flutter doctor -v</code></pre>
 </div>
     <div class="note" data-index="16">
   <h3 class="note__title">Linux Firebase and Test App</h3>
-  <p>Start <code>Pixel_9a_API_37</code>, then run:</p>
+  <p>Start the Pixel 9a emulator you created, then run:</p>
 <pre class="code-block" data-lang="bash"><code>flutter devices
 flutter run -d &lt;emulator-device-id&gt;</code></pre>
 <p>Replace the placeholder with the ID printed by <code>flutter devices</code>. Press <code>q</code> to stop the app, then run <code>flutter build apk --debug</code>.</p>
